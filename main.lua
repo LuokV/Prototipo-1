@@ -14,7 +14,7 @@ function love.load()
 
     --Inicializacion del mundo fisico
     love.physics.setMeter(32)
-    world = love.physics.newWorld(0,9.81*32,true)
+    world = love.physics.newWorld(0,9.81*4,true)
 
     --Inicializacion de la ventana
     love.window.setMode (ventana.ancho * ventana.escala, ventana.alto * ventana.escala )
