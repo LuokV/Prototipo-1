@@ -23,12 +23,17 @@ function love.load()
     -- Incializacion del Canvas
     lienzo = love.graphics.newCanvas(ventana.ancho, ventana.alto)
 
+    --Inicializacion del Jugador
+    jugador.Crear(ventana.ancho/2, 130)
+
     CrearEscenario()
 end
 
 -- ACTUALIZACION
 function love.update(dt)
     world:update(dt)
+
+    jugador.Actualizar(dt)
 end
 
 -- RENDER
@@ -37,6 +42,7 @@ function love.draw()
     love.graphics.clear()
 
     DibujarEscenario()
+    jugador.Dibujar()
 
     love.graphics.setCanvas()
 
