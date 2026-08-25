@@ -9,12 +9,32 @@ alto = 144,
 escala = 4
 }
 
+entidad1 = nil
+entidad2 = nil
+contacto = false
+nx, ny = nil
+
+function iniciarContacto(a,b,col)
+    contacto = true
+    entidad1 = a:getUserData()
+    entidad2 = b:getUserData()
+
+    nx,ny = col:getNormal()
+end
+
+function terminarContacto(a,b,col)
+    contacto = false
+    entidad1 = nil
+    entidad2 = nil
+end
+
 -- Primero se cargan los parametros para la inicializacion
 function love.load()
 
     --Inicializacion del mundo fisico
     love.physics.setMeter(32)
     world = love.physics.newWorld(0,9.81*4,true)
+    world:setCallbacks(iniciarContacto, terminarContacto)
 
     --Inicializacion de la ventana
     love.window.setMode (ventana.ancho * ventana.escala, ventana.alto * ventana.escala )
@@ -47,5 +67,13 @@ function love.draw()
     love.graphics.setCanvas()
 
     love.graphics.draw(lienzo, 0, 0, 0, ventana.escala, ventana.escala)
+
+    love.graphics.setColor(1, 0, 0)
+    if contacto then
+        love.graphics.print("CHOQUE", 650/2,200 + 20)
+        love.graphics.print(entidad1, 650/2,200 + 30)
+        love.graphics.print(entidad2, 650/2,200 + 40)
+    end
+    love.graphics.setColor(1, 1, 1)
     
 end

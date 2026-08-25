@@ -1,8 +1,7 @@
 jugador = {
-
     x= 0,
     y = 0,
-    velocidad = 70,
+    velocidad = 60,
     ancho = 0,
     alto = 0,
     origen_x = 0,
@@ -10,8 +9,11 @@ jugador = {
     sprite = nil,
     cuerpo = nil,
     forma = nil,
-    acople = nil
+    acople = nil,
 }
+
+
+local tag = "jugador"
 
 --Inicializacion
 
@@ -28,27 +30,39 @@ function jugador.Crear(x, y)
     jugador.forma = love.physics.newRectangleShape(jugador.sprite:getWidth(), jugador.sprite:getHeight())
     jugador.acople = love.physics.newFixture(jugador.cuerpo, jugador.forma)
 
-    jugador.acople:setFriction(1)
-    jugador.cuerpo:setLinearDamping(1)
+    jugador.acople:setUserData(tag)
 
+    jugador.cuerpo:setFixedRotation(true)
 end
 
 function jugador.Actualizar(dt)
 
-     if love.keyboard.isDown("right") then
-        jugador.cuerpo:applyForce(15, 0)
+local dx, dy = jugador.cuerpo:getLinearVelocity()
+dx=0
+
+    if love.keyboard.isDown("right") then
+        dx = jugador.velocidad
+        if contacto and  nx > 0.5 and ny < 0.5 then
+            dx = 0
+        end
     elseif love.keyboard.isDown("left") then
-        jugador.cuerpo:applyForce(-15, 0)
-   -- elseif love.keyboard.isDown("down") then
-       -- jugador.y = jugador.y + (jugador.velocidad * dt)
+        dx = - jugador.velocidad
+          if contacto and nx < 0.5 and ny < 0.5 then
+            dx = 0
+        end
     end
 
-    if love.keyboard.isDown("up") then
-        jugador.cuerpo:applyLinearImpulse(0, -5)
+    if contacto and entidad2 ~= "Pared" and ny > 0.5 then
+        if love.keyboard.isDown("up") then
+        dy = - jugador.velocidad
+        end
     end
+
+    jugador.cuerpo:setLinearVelocity(dx,dy)
 
 end
 
 function jugador.Dibujar()
+    --love.graphics.polygon("fill", jugador.cuerpo:getWorldPoints(jugador.forma:getPoints()))
     love.graphics.draw(jugador.sprite, jugador.cuerpo:getX(), jugador.cuerpo:getY(), 0, 1, 1, jugador.origen_x, jugador.origen_y)
 end

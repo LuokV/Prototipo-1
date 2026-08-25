@@ -15,7 +15,6 @@ function Estructuras:Nuevo(x, y, ruta, tag, escalax, escalay)
     plataforma.escala_y = escalay
     plataforma.forma = love.physics.newRectangleShape(plataforma.sprite:getWidth()*plataforma.escala_x, plataforma.sprite:getHeight()*plataforma.escala_y)
     plataforma.acople = love.physics.newFixture(plataforma.cuerpo, plataforma.forma)
-    plataforma.acople:setFriction(0.5)
     plataforma.acople:setUserData(tag)
 
     return plataforma
@@ -34,12 +33,12 @@ function CrearEscenario()
     piso = Estructuras:Nuevo(160/2, 140, "img/Floor.png", tag2, 1, 1)
 
     --plataformas sin sprites
-    centro = Estructuras:Nuevo(ventana.ancho/2, ventana.alto/2, "img/Floor.png", tag2, 0.25, 0.50)
+    centro = Estructuras:Nuevo(ventana.ancho/2, ventana.alto/2, "img/Floor.png", tag3, 0.25, 0.50)
 
-    superior_izq = Estructuras:Nuevo(40, 40, "img/Floor.png", tag2, 0.20, 0.50)
-    superior_der = Estructuras:Nuevo(120, 40, "img/Floor.png", tag2, 0.20, 0.50)
-    inferior_izq = Estructuras:Nuevo(40, 110, "img/Floor.png", tag2, 0.20, 0.50)
-    inferior_der = Estructuras:Nuevo(120, 110, "img/Floor.png", tag2, 0.20, 0.50)
+    superior_izq = Estructuras:Nuevo(40, 40, "img/Floor.png", tag3, 0.20, 0.50)
+    superior_der = Estructuras:Nuevo(120, 40, "img/Floor.png", tag3, 0.20, 0.50)
+    inferior_izq = Estructuras:Nuevo(40, 110, "img/Floor.png", tag3, 0.20, 0.50)
+    inferior_der = Estructuras:Nuevo(120, 110, "img/Floor.png", tag3, 0.20, 0.50)
 end
 
 --NOTA: El cuerpo FISICO se origina desde el centro, mientras que los SPRITES desde la esquina superior izq
