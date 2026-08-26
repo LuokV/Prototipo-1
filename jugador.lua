@@ -40,10 +40,6 @@ end
 
 function jugador.Actualizar(dt)
 
--- Hitbox para colision con Notas Musicales (posiblemente se cambie mas adelante)
-jugador.hitbox_x = jugador.cuerpo:getX() - jugador.origen_x
-jugador.hitbox_y = jugador.cuerpo:getY() - jugador.origen_y
-
 local dx, dy = jugador.cuerpo:getLinearVelocity()
 dx=0
 
@@ -68,6 +64,10 @@ dx=0
     end
 
     jugador.cuerpo:setLinearVelocity(dx,dy)
+
+    -- Hitbox para colision con Notas Musicales (posiblemente se cambie mas adelante)
+jugador.hitbox_x = jugador.cuerpo:getX() - jugador.origen_x
+jugador.hitbox_y = jugador.cuerpo:getY() - jugador.origen_y
 
 end
 

@@ -15,6 +15,7 @@ contacto = false
 nx, ny = nil
 
 atrapado = false
+atrapado2 = false
 depurar = true
 
 ---------------------------- FUNCIONES -----------------------------------
@@ -74,7 +75,7 @@ end
 function debugUI()
     love.graphics.setColor(0, 1, 0)
     love.graphics.print("FPS: "..love.timer.getFPS(), 10, 10)
-    if atrapado then
+    if atrapado or atrapado2 then
         love.graphics.print("ATRAPADO", 100, 10)
     end
     love.graphics.setColor(1, 1, 1)
@@ -117,8 +118,8 @@ function love.load()
     jugador.Crear(ventana.ancho/2, 130)
 
     --Iniciar Notas
-    nota_roja = NotasMusicales:Nueva(130, 130, "img/Rojo.png", 10, 0.75, 1)
-    nota_verde = NotasMusicales:Nueva(130,130, "img/Verde.png", 70, 0.75, 2)
+    nota_roja = NotasMusicales:Nueva(130, 130, "img/Rojo.png", 10, 1, 1)
+    nota_verde = NotasMusicales:Nueva(130,130, "img/Verde.png", 30, 1, 2)
 
     -- Posiciones de notas musicales
     math.randomseed(os.time())
@@ -138,7 +139,7 @@ function love.update(dt)
     nota_verde:Actualizar(jugador.cuerpo:getX(), jugador.cuerpo:getY(), jugador.ancho, jugador.alto, dt)
 
     atrapado = comprobarColision(jugador,nota_roja)
-    atrapado = comprobarColision(jugador,nota_verde)
+    atrapado2 = comprobarColision(jugador,nota_verde)
     
 end
 
