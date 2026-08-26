@@ -26,6 +26,16 @@ color = nil
 derrota = false
 victoria = false
 
+
+--SONIDOS
+sonidos = {
+    musica = love.audio.newSource("sounds/musica.ogg", "stream"),
+    victoria = love.audio.newSource("sounds/victoria.wav", "stream"),
+    derrota = love.audio.newSource("sounds/derrota.wav", "stream"),
+    sfx_hit = love.audio.newSource("sounds/hit.wav", "static"),
+    sfx_whoosh = love.audio.newSource("sounds/whoosh.wav", "static")
+}
+
 ---------------------------- FUNCIONES -----------------------------------
 
 -- COLISIONES
@@ -87,12 +97,16 @@ function love.keypressed(key, scancode, isrepeat)
         depurar = not depurar
     elseif key == "q" and not ataque.activado then
         ataque.activado =true
+        love.audio.play(sonidos.sfx_whoosh)
     elseif key == "w" and not ataque2.activado then
         ataque2.activado =true
+        love.audio.play(sonidos.sfx_whoosh)
     elseif key == "e" and not ataque3.activado then
         ataque3.activado =true
+        love.audio.play(sonidos.sfx_whoosh)
     elseif key == "r" and not ataque4.activado then
         ataque4.activado =true
+        love.audio.play(sonidos.sfx_whoosh)
     end 
 end
 
@@ -102,7 +116,19 @@ function Golpe(nota, tipoataque)
         nota:PosicionarNota()
         if tipoataque.activado then
             jugador.notas = jugador.notas + 1
+            love.audio.play(nota.sonido)
+            if jugador.notas == jugador.cancion then
+                victoria = true
+                love.audio.stop(sonidos.musica)
+                love.audio.play(sonidos.victoria)
+            end
         else jugador.vidas = jugador.vidas - 1
+             love.audio.play(sonidos.sfx_hit)
+             if jugador.vidas == 0 then
+                derrota = true
+                love.audio.stop(sonidos.musica)
+                love.audio.play(sonidos.derrota)
+             end
         end
     end
 end
@@ -121,6 +147,11 @@ function love.load()
     love.window.setMode (ventana.ancho * ventana.escala, ventana.alto * ventana.escala )
     love.graphics.setDefaultFilter("nearest", "nearest")
 
+    --MUSICA
+    sonidos.musica:setLooping(true)
+    sonidos.musica:setVolume(0.70) -- 0 a 1
+    love.audio.play(sonidos.musica)
+
     -- Incializacion del Canvas
     lienzo = love.graphics.newCanvas(ventana.ancho, ventana.alto)
 
@@ -128,10 +159,11 @@ function love.load()
     jugador.Crear(ventana.ancho/2, 130)
 
     --Iniciar Notas // ARREGLAR BUG DEL ESCALADO
-    nota_roja = NotasMusicales:Nueva(130, 130, "img/Rojo.png", 10, 1, 1)
-    nota_verde = NotasMusicales:Nueva(130,130, "img/Verde.png", 30, 1, 2)
-    nota_azul = NotasMusicales:Nueva(130,130, "img/Azul.png", 30, 1, 2)
-    nota_amarilla = NotasMusicales:Nueva(130,130, "img/Amarillo.png", 30, 1, 2)
+    nota_roja = NotasMusicales:Nueva(130, 130, "img/Rojo.png", 10, 1, "sounds/cortar.wav")
+    nota_verde = NotasMusicales:Nueva(130,130, "img/Verde.png", 20, 1, "sounds/colision.wav")
+    nota_azul = NotasMusicales:Nueva(130,130, "img/Azul.png", 10, 1, "sounds/espada.wav")
+    nota_amarilla = NotasMusicales:Nueva(130,130, "img/Amarillo.png", 10, 1, "sounds/pium.mp3")
+
 
     -- Ataques musicales
     ataque = CrearAnimacion("img/CortarSprites.png",3,32,32,12, false)
@@ -158,11 +190,12 @@ end
 
 -- ACTUALIZACION
 function love.update(dt)
-    world:update(dt)
-
-    if derrota or victoria then
+    
+     if derrota or victoria then
         return
     end
+
+    world:update(dt)
 
     jugador.Actualizar(dt)
 

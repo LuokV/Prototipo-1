@@ -5,7 +5,7 @@ NotasMusicales.__index = NotasMusicales
 
 --Inicializacion
 
-function NotasMusicales:Nueva(x, y, ruta, velocidad, escala, color)
+function NotasMusicales:Nueva(x, y, ruta, velocidad, escala, ruta_sonido)
 
     local o = setmetatable({}, NotasMusicales)
 
@@ -25,7 +25,8 @@ function NotasMusicales:Nueva(x, y, ruta, velocidad, escala, color)
     o.hitbox_alto = 0
     o.velocidad = velocidad
     o.atrapado = false
-    o.color = color -- 1) ROJO 2) VERDE 3) AZUL 4) AMARILLO
+    o.sonido =  love.audio.newSource(ruta_sonido, "static")
+    
     
     return o
    
