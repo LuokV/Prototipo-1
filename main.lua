@@ -12,10 +12,19 @@ escala = 4
 entidad1 = nil
 entidad2 = nil
 contacto = false
+primer_nx, primer_ny = nil
 nx, ny = nil
+
+entidadguardada1 = nil
+entidadguardada2 = nil
 
 function iniciarContacto(a,b,col)
     contacto = true
+
+    if a:getUserData() == "jugador" or b:getUserData() == "jugador" then
+        jugador.encontacto = jugador.encontacto + 1
+    end
+
     entidad1 = a:getUserData()
     entidad2 = b:getUserData()
 
@@ -24,6 +33,11 @@ end
 
 function terminarContacto(a,b,col)
     contacto = false
+
+    if a:getUserData() == "jugador" or b:getUserData() == "jugador" then
+        jugador.encontacto = jugador.encontacto - 1
+    end
+
     entidad1 = nil
     entidad2 = nil
 end
@@ -73,6 +87,7 @@ function love.draw()
         love.graphics.print("CHOQUE", 650/2,200 + 20)
         love.graphics.print(entidad1, 650/2,200 + 30)
         love.graphics.print(entidad2, 650/2,200 + 40)
+        love.graphics.print(jugador.encontacto, 650/2,200 + 50)
     end
     love.graphics.setColor(1, 1, 1)
     

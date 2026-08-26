@@ -1,7 +1,7 @@
 jugador = {
     x= 0,
     y = 0,
-    velocidad = 60,
+    velocidad = 70,
     ancho = 0,
     alto = 0,
     origen_x = 0,
@@ -10,6 +10,7 @@ jugador = {
     cuerpo = nil,
     forma = nil,
     acople = nil,
+    encontacto = 0
 }
 
 
@@ -52,10 +53,12 @@ dx=0
         end
     end
 
-    if contacto and entidad2 ~= "Pared" and ny > 0.5 then
-        if love.keyboard.isDown("up") then
+    if jugador.encontacto > 0 then
+
+       if love.keyboard.isDown("up") then
         dy = - jugador.velocidad
-        end
+       end
+
     end
 
     jugador.cuerpo:setLinearVelocity(dx,dy)
