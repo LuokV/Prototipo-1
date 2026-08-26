@@ -12,7 +12,11 @@ jugador = {
     cuerpo = nil,
     forma = nil,
     acople = nil,
-    encontacto = 0
+    encontacto = 0,
+
+    vidas = 3,
+    cancion = 10,
+    notas = 0
 }
 
 

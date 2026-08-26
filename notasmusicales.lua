@@ -24,10 +24,28 @@ function NotasMusicales:Nueva(x, y, ruta, velocidad, escala, color)
     o.hitbox_ancho = 0
     o.hitbox_alto = 0
     o.velocidad = velocidad
+    o.atrapado = false
     o.color = color -- 1) ROJO 2) VERDE 3) AZUL 4) AMARILLO
     
     return o
    
+end
+
+function NotasMusicales:Colisiones()
+    local x1 = jugador.hitbox_x
+    local y1 = jugador.hitbox_y
+    local ancho1 = jugador.ancho
+    local alto1 = jugador.alto
+
+    local x2 = self.hitbox_x
+    local y2= self.hitbox_y
+    local ancho2 = self.ancho
+    local alto2 = self.alto
+
+    return x1 < x2 + ancho2 and
+           x2 < x1 + ancho1 and
+           y1 < y2 + alto2 and
+           y2 < y1 + alto1
 end
 
 function NotasMusicales:PosicionarNota()
