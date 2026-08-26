@@ -1,11 +1,13 @@
 jugador = {
     x= 0,
     y = 0,
-    velocidad = 70,
+    velocidad = 60,
     ancho = 0,
     alto = 0,
     origen_x = 0,
     origen_y = 0,
+    hitbox_x = 0,
+    hitbox_y = 0,
     sprite = nil,
     cuerpo = nil,
     forma = nil,
@@ -38,6 +40,10 @@ end
 
 function jugador.Actualizar(dt)
 
+-- Hitbox para colision con Notas Musicales (posiblemente se cambie mas adelante)
+jugador.hitbox_x = jugador.cuerpo:getX() - jugador.origen_x
+jugador.hitbox_y = jugador.cuerpo:getY() - jugador.origen_y
+
 local dx, dy = jugador.cuerpo:getLinearVelocity()
 dx=0
 
@@ -67,5 +73,10 @@ end
 
 function jugador.Dibujar()
     --love.graphics.polygon("fill", jugador.cuerpo:getWorldPoints(jugador.forma:getPoints()))
-    love.graphics.draw(jugador.sprite, jugador.cuerpo:getX(), jugador.cuerpo:getY(), 0, 1, 1, jugador.origen_x, jugador.origen_y)
+    love.graphics.draw(jugador.sprite, redondear(jugador.cuerpo:getX()), redondear(jugador.cuerpo:getY()), 0, 1, 1, jugador.origen_x, jugador.origen_y)
+end
+
+function jugador.Debug()
+    love.graphics.rectangle("line", redondear(jugador.hitbox_x), redondear(jugador.hitbox_y), jugador.ancho, jugador.alto)
+    love.graphics.circle("fill", redondear(jugador.cuerpo:getX()), redondear(jugador.cuerpo:getY()), 1)
 end
