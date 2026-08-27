@@ -1,7 +1,8 @@
 jugador = {
     x= 0,
     y = 0,
-    velocidad = 60,
+    velocidad_x = 60,
+    velocidad_y = 120,
     ancho = 0,
     alto = 0,
     origen_x = 0,
@@ -63,13 +64,13 @@ local dx, dy = jugador.cuerpo:getLinearVelocity()
 dx=0
 
     if love.keyboard.isDown("right") then
-        dx = jugador.velocidad
+        dx = jugador.velocidad_x
         jugador.correr_der.activado = true
         if contacto and  nx > 0.5 and ny < 0.5 then
             dx = 0
         end
     elseif love.keyboard.isDown("left") then
-        dx = - jugador.velocidad
+        dx = - jugador.velocidad_x
         jugador.correr_izq.activado = true
           if contacto and nx < 0.5 and ny < 0.5 then
             dx = 0
@@ -82,7 +83,7 @@ dx=0
     if jugador.encontacto > 0 then
 
        if love.keyboard.isDown("up") then
-        dy = - jugador.velocidad
+        dy = - jugador.velocidad_y
        end
 
     end

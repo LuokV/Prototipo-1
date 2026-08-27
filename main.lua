@@ -140,7 +140,7 @@ function love.load()
 
     --Inicializacion del mundo fisico
     love.physics.setMeter(32)
-    world = love.physics.newWorld(0,9.81*4,true)
+    world = love.physics.newWorld(0,9.81*16,true)
     world:setCallbacks(iniciarContacto, terminarContacto)
 
     --Inicializacion de la ventana
