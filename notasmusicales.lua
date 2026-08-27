@@ -32,6 +32,8 @@ function NotasMusicales:Nueva(x, y, ruta, velocidad, escala, ruta_sonido)
    
 end
 
+-- FUNCIONES DE COMPORTAMIENTO
+
 function NotasMusicales:Colisiones()
     local x1 = jugador.hitbox_x
     local y1 = jugador.hitbox_y
@@ -66,7 +68,31 @@ function NotasMusicales:PosicionarNota()
     end
 end
 
--- Actualizar
+-- En caso de colision, controla el cambio de los valores de las variables dependiendo de quien recibio el golpe
+function NotasMusicales:Golpe(nota, tipoataque)
+    if nota.atrapado then
+        nota:PosicionarNota()
+        if tipoataque.activado then
+            jugador.notas = jugador.notas + 1
+            love.audio.play(nota.sonido)
+            if jugador.notas == jugador.cancion then
+                victoria = true
+                love.audio.stop(sonidos.musica)
+                love.audio.play(sonidos.victoria)
+            end
+        else jugador.vidas = jugador.vidas - 1
+             love.audio.play(sonidos.sfx_hit)
+             if jugador.vidas == 0 then
+                derrota = true
+                love.audio.stop(sonidos.musica)
+                love.audio.play(sonidos.derrota)
+             end
+        end
+    end
+end
+
+
+------ ACTUALIZACION --------
 
 function NotasMusicales:Actualizar(x, y, a, al, dt)
        --Persecución
@@ -98,9 +124,13 @@ function NotasMusicales:Actualizar(x, y, a, al, dt)
     self.hitbox_y = self.y - (self.hitbox_alto/2)
 end
 
+------ RENDER --------
+
 function NotasMusicales:Dibujar()
     love.graphics.draw(self.sprite,redondear(self.x),redondear(self.y), 0, self.escala, self.escala, self.origen_x, self.origen_y)
 end
+
+------ DEBUG --------
 
 function NotasMusicales:Debug()
     love.graphics.rectangle("line", redondear(self.hitbox_x), redondear(self.hitbox_y), self.hitbox_ancho, self.hitbox_alto)

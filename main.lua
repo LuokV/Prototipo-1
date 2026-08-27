@@ -65,6 +65,7 @@ function terminarContacto(a,b,col)
     entidad2 = nil
 end
 
+---------------------------------------------------------------
 
 -- REDONDEO ya que se trabaja con pixel art
 function redondear(n)
@@ -110,29 +111,6 @@ function love.keypressed(key, scancode, isrepeat)
     end 
 end
 
--- Quien recibio el golpe, el jugador o la nota
-function Golpe(nota, tipoataque)
-    if nota.atrapado then
-        nota:PosicionarNota()
-        if tipoataque.activado then
-            jugador.notas = jugador.notas + 1
-            love.audio.play(nota.sonido)
-            if jugador.notas == jugador.cancion then
-                victoria = true
-                love.audio.stop(sonidos.musica)
-                love.audio.play(sonidos.victoria)
-            end
-        else jugador.vidas = jugador.vidas - 1
-             love.audio.play(sonidos.sfx_hit)
-             if jugador.vidas == 0 then
-                derrota = true
-                love.audio.stop(sonidos.musica)
-                love.audio.play(sonidos.derrota)
-             end
-        end
-    end
-end
-
 ------------------------ INICIAR - ACTUALIZAR - RENDERIZAR ----------------------
 
 -- INICIALIZACION
@@ -164,7 +142,7 @@ function love.load()
     nota_azul = NotasMusicales:Nueva(130,130, "img/Azul.png", 10, 1, "sounds/espada.wav")
     nota_amarilla = NotasMusicales:Nueva(130,130, "img/Amarillo.png", 10, 1, "sounds/pium.mp3")
 
-    -- Ataques musicales
+    -- Ataques musicalesl
     ataque = CrearAnimacion("img/CortarSprites.png",3,32,32,12, false, 32, 0)
     ataque.activado = false
 
@@ -198,25 +176,29 @@ function love.update(dt)
 
     jugador.Actualizar(dt)
 
-    nota_roja:Actualizar(jugador.cuerpo:getX(), jugador.cuerpo:getY(), jugador.ancho, jugador.alto, dt)
-    nota_verde:Actualizar(jugador.cuerpo:getX(), jugador.cuerpo:getY(), jugador.ancho, jugador.alto, dt)
-    nota_azul:Actualizar(jugador.cuerpo:getX(), jugador.cuerpo:getY(), jugador.ancho, jugador.alto, dt)
-    nota_amarilla:Actualizar(jugador.cuerpo:getX(), jugador.cuerpo:getY(), jugador.ancho, jugador.alto, dt)
-
-    nota_roja.atrapado = nota_roja:Colisiones()
-    nota_verde.atrapado = nota_verde:Colisiones()
-    nota_azul.atrapado = nota_azul:Colisiones()
-    nota_amarilla.atrapado = nota_amarilla:Colisiones()
-
+    -- Animaciones de ataque del juegaor
     ActualizarAnimacion(ataque,dt, true)
     ActualizarAnimacion(ataque2,dt, true)
     ActualizarAnimacion(ataque3,dt, true)
     ActualizarAnimacion(ataque4,dt, true)
 
-    Golpe(nota_roja, ataque)
-    Golpe(nota_verde, ataque2)
-    Golpe(nota_azul, ataque3)
-    Golpe(nota_amarilla, ataque4)
+    --Movimiento de las notas musicales
+    nota_roja:Actualizar(jugador.cuerpo:getX(), jugador.cuerpo:getY(), jugador.ancho, jugador.alto, dt)
+    nota_verde:Actualizar(jugador.cuerpo:getX(), jugador.cuerpo:getY(), jugador.ancho, jugador.alto, dt)
+    nota_azul:Actualizar(jugador.cuerpo:getX(), jugador.cuerpo:getY(), jugador.ancho, jugador.alto, dt)
+    nota_amarilla:Actualizar(jugador.cuerpo:getX(), jugador.cuerpo:getY(), jugador.ancho, jugador.alto, dt)
+
+    --Verificación de colision de las notas musicales con el juegador
+    nota_roja.atrapado = nota_roja:Colisiones()
+    nota_verde.atrapado = nota_verde:Colisiones()
+    nota_azul.atrapado = nota_azul:Colisiones()
+    nota_amarilla.atrapado = nota_amarilla:Colisiones()
+
+   --Función que verifica quien recibio el golpe y las condiciones de derrota/victoria
+    nota_roja:Golpe(nota_roja, ataque)
+    nota_verde:Golpe(nota_verde, ataque2)
+    nota_azul:Golpe(nota_azul, ataque3)
+    nota_amarilla:Golpe(nota_amarilla, ataque4)
 
 end
 

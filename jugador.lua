@@ -20,12 +20,9 @@ jugador = {
     notas = 0,
 
     --Animaciones
-    
     correr_der = nil,
     correr_izq = nil,
     salto = nil
-
- 
 }
 
 
@@ -80,7 +77,7 @@ dx=0
          jugador.salto.activado = false
     end
 
-    if jugador.encontacto > 0 then
+    if jugador.encontacto > 0  then
 
        if love.keyboard.isDown("up") then
         dy = - jugador.velocidad_y

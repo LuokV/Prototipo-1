@@ -21,10 +21,14 @@ function Estructuras:Nuevo(x, y, ruta, tag, escalax, escalay)
 
 end
 
+---- FUNCION PARA CREAR PARTES DEL ESCENARIO
+
 function Estructuras:DibujarPlataforma()
     --love.graphics.polygon("fill", self.cuerpo:getWorldPoints(self.forma:getPoints()))
     love.graphics.draw(self.sprite, self.cuerpo:getX(), self.cuerpo:getY(), 0, self.escala_x, self.escala_y, self.sprite:getWidth()/2, self.sprite:getHeight()/2)
 end
+
+---- FUNCIONES PARA CARGAR y DIBUJAR EL ESCENARIO RESPECTIVAMENTE
 
 function CrearEscenario()
     columnaizquieda = Estructuras:Nuevo(6, 144/2, "img/Wall.png", tag1, 0.75, 1)
