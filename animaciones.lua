@@ -1,7 +1,7 @@
 -- Libreria Animaciones con Quads
 
 --INICIALIZACION
-function CrearAnimacion(imagen, limite, ancho, alto, velocidad, esVertical)
+function CrearAnimacion(imagen, limite, ancho, alto, velocidad, esVertical, columna, fila)
     local animacion = {}
 
     animacion.spritesheet = love.graphics.newImage(imagen)
@@ -12,11 +12,14 @@ function CrearAnimacion(imagen, limite, ancho, alto, velocidad, esVertical)
 
     if esVertical then
         for i = 0, limite, 1 do
-            table.insert(animacion.quads, love.graphics.newQuad(0, alto * i, ancho, alto, animacion.spritesheet))
+            table.insert(animacion.quads, love.graphics.newQuad(columna, fila * i, ancho, alto, animacion.spritesheet))
         end
     else
-        for i = 0, limite, 1 do
-             table.insert(animacion.quads, love.graphics.newQuad(ancho * i, 0, ancho, alto, animacion.spritesheet))
+        for i = 0, limite, 1 do 
+            if limite == 0 then
+                table.insert(animacion.quads, love.graphics.newQuad( columna , fila , ancho, alto, animacion.spritesheet))
+            else table.insert(animacion.quads, love.graphics.newQuad( columna * i , fila , ancho, alto, animacion.spritesheet))
+         end
         end
     end
 

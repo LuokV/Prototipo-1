@@ -164,18 +164,17 @@ function love.load()
     nota_azul = NotasMusicales:Nueva(130,130, "img/Azul.png", 10, 1, "sounds/espada.wav")
     nota_amarilla = NotasMusicales:Nueva(130,130, "img/Amarillo.png", 10, 1, "sounds/pium.mp3")
 
-
     -- Ataques musicales
-    ataque = CrearAnimacion("img/CortarSprites.png",3,32,32,12, false)
+    ataque = CrearAnimacion("img/CortarSprites.png",3,32,32,12, false, 32, 0)
     ataque.activado = false
 
-    ataque2 = CrearAnimacion("img/AuraSprites.png",4,25,24,12, false)
+    ataque2 = CrearAnimacion("img/AuraSprites.png",4,25,24,12, false, 25, 0)
     ataque2.activado = false
 
-    ataque3 = CrearAnimacion("img/AuraSprites.png",4,25,24,12, false)
+    ataque3 = CrearAnimacion("img/AuraSprites.png",4,25,24,12, false, 25, 0)
     ataque3.activado = false
 
-    ataque4 = CrearAnimacion("img/AuraSprites.png",4,25,24,12, false)
+    ataque4 = CrearAnimacion("img/AuraSprites.png",4,25,24,12, false, 25, 0)
     ataque4.activado = false
 
     -- Posiciones de notas musicales

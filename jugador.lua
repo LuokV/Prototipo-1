@@ -16,7 +16,15 @@ jugador = {
 
     vidas = 3,
     cancion = 10,
-    notas = 0
+    notas = 0,
+
+    --Animaciones
+    
+    correr_der = nil,
+    correr_izq = nil,
+    salto = nil
+
+ 
 }
 
 
@@ -28,7 +36,7 @@ function jugador.Crear(x, y)
 
     jugador.x = x
     jugador.y = y
-    jugador.sprite = love.graphics.newImage("img/Goat.png")
+    jugador.sprite = love.graphics.newImage("img/Ninja.png")
     jugador.ancho = jugador.sprite:getWidth()
     jugador.alto = jugador.sprite:getHeight()
     jugador.origen_x = jugador.ancho/2
@@ -37,10 +45,17 @@ function jugador.Crear(x, y)
     jugador.forma = love.physics.newRectangleShape(jugador.sprite:getWidth(), jugador.sprite:getHeight())
     jugador.acople = love.physics.newFixture(jugador.cuerpo, jugador.forma)
 
+    --Animaciones
+    jugador.correr_der = CrearAnimacion("img/NinjaSprites.png",3,16,16,12, true, 48, 16)
+    jugador.correr_izq = CrearAnimacion("img/NinjaSprites.png",3,16,16,12, true, 32, 16)
+    jugador.salto = CrearAnimacion("img/NinjaSprites.png",0,16,16,2, false, 16, 96)
+    -----------
+
     jugador.acople:setUserData(tag)
 
     jugador.cuerpo:setFixedRotation(true)
 end
+
 
 function jugador.Actualizar(dt)
 
@@ -49,14 +64,19 @@ dx=0
 
     if love.keyboard.isDown("right") then
         dx = jugador.velocidad
+        jugador.correr_der.activado = true
         if contacto and  nx > 0.5 and ny < 0.5 then
             dx = 0
         end
     elseif love.keyboard.isDown("left") then
         dx = - jugador.velocidad
+        jugador.correr_izq.activado = true
           if contacto and nx < 0.5 and ny < 0.5 then
             dx = 0
         end
+    else jugador.correr_der.activado = false
+         jugador.correr_izq.activado = false
+         jugador.salto.activado = false
     end
 
     if jugador.encontacto > 0 then
@@ -67,7 +87,15 @@ dx=0
 
     end
 
-    jugador.cuerpo:setLinearVelocity(dx,dy)
+    if jugador.encontacto == 0 then
+        jugador.salto.activado = true
+    end
+
+jugador.cuerpo:setLinearVelocity(dx,dy)
+
+ActualizarAnimacion(jugador.correr_der,dt, false)
+ActualizarAnimacion(jugador.correr_izq,dt, false)
+ActualizarAnimacion(jugador.salto,dt, false)
 
     -- Hitbox para colision con Notas Musicales (posiblemente se cambie mas adelante)
 jugador.hitbox_x = jugador.cuerpo:getX() - jugador.origen_x
@@ -77,7 +105,14 @@ end
 
 function jugador.Dibujar()
     --love.graphics.polygon("fill", jugador.cuerpo:getWorldPoints(jugador.forma:getPoints()))
-    love.graphics.draw(jugador.sprite, redondear(jugador.cuerpo:getX()), redondear(jugador.cuerpo:getY()), 0, 1, 1, jugador.origen_x, jugador.origen_y)
+    
+    DibujarAnimacion(jugador.correr_der, redondear(jugador.cuerpo:getX()), redondear(jugador. cuerpo:getY()), jugador.origen_x, jugador.origen_y)
+    DibujarAnimacion(jugador.correr_izq, redondear(jugador.cuerpo:getX()), redondear(jugador. cuerpo:getY()), jugador.origen_x, jugador.origen_y)
+    DibujarAnimacion(jugador.salto, redondear(jugador.cuerpo:getX()), redondear(jugador. cuerpo:getY()), jugador.origen_x, jugador.origen_y)
+
+    if not jugador.correr_der.activado and not jugador.correr_izq.activado and not jugador.salto.activado then
+        love.graphics.draw(jugador.sprite, redondear(jugador.cuerpo:getX()), redondear(jugador.cuerpo:getY()), 0,1,1, jugador.origen_x, jugador.origen_y)
+    end
 end
 
 function jugador.Debug()
