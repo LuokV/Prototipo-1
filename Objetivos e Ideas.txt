@@ -1,0 +1,25 @@
+Objetivo Core: Realizar un juego de plataforma con click-time (teclado) como parte de su gameplay
+
+Juego de plataforma donde se podrá mover el personaje libremente en lo que permita la ventana o 
+"Stage" en el que se encuentre; con el objetivo de capturar "X" cantidad de notas para la victoria.
+Errar (ser golpeado por ellas), "X" cantidad de veces, concluirá en derrota.
+
+
+Ideas: 
+
+(Algunas ideas pueden ser opcionales, pero se espera poder cumplir la mayoría sino todas)
+
+- Aura alrededor del personaje (Sensor?) que se achicara o agrandará según el jugador erre o
+este infligido por algún buff/debuff 
+- Re escalar el prototipo 1 para que el jugador tenga mas espacio para moverse
+- Notas musicales mas veloces y un sistema de "push-pop" para el almacenamiento de estas.
+Lo ideal serian que estas sean mas chicas que el jugador y poder aumentar su aleatoriedad. 
+
+------------------------------
+
+Buscar música y sonidos mas acordes al juego, la temática sería "carnaval".
+Los sprites serán cambiados lo antes posible por imágenes hechas en Aseprite.
+
+Sinopsis general : " Un Bardo/músico atrapado en un mundo ficticio de ambiente 
+carnaval donde deberá aplicar sus reflejos y experiencia para conseguir tocar las notas
+musicales de forma precisa para lograr sobrevivir"
