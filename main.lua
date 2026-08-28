@@ -44,8 +44,13 @@ sonidos = {
 function iniciarContacto(a,b,col)
     contacto = true
 
-    if a:getUserData() == "jugador" or b:getUserData() == "jugador" then
+  --[[  if a:getUserData() == "jugador" or b:getUserData() == "jugador" then
         jugador.encontacto = jugador.encontacto + 1
+    end
+    ]]
+
+    if a:getUserData() == "jugador" and b:getUserData() == "Piso" or a:getUserData() == "jugador" and b:getUserData() == "Plataforma" then
+        jugador.puede_saltar = true
     end
 
     entidad1 = a:getUserData()
@@ -57,10 +62,11 @@ end
 function terminarContacto(a,b,col)
     contacto = false
 
-    if a:getUserData() == "jugador" or b:getUserData() == "jugador" then
+  --[[  if a:getUserData() == "jugador" or b:getUserData() == "jugador" then
         jugador.encontacto = jugador.encontacto - 1
     end
-
+    ]]
+    
     entidad1 = nil
     entidad2 = nil
 end
@@ -195,10 +201,10 @@ function love.update(dt)
     nota_amarilla.atrapado = nota_amarilla:Colisiones()
 
    --Función que verifica quien recibio el golpe y las condiciones de derrota/victoria
-    nota_roja:Golpe(nota_roja, ataque)
-    nota_verde:Golpe(nota_verde, ataque2)
-    nota_azul:Golpe(nota_azul, ataque3)
-    nota_amarilla:Golpe(nota_amarilla, ataque4)
+    --nota_roja:Golpe(nota_roja, ataque)
+    --nota_verde:Golpe(nota_verde, ataque2)
+    --nota_azul:Golpe(nota_azul, ataque3)
+    --nota_amarilla:Golpe(nota_amarilla, ataque4)
 
 end
 
@@ -251,7 +257,7 @@ function love.draw()
         love.graphics.print("CHOQUE", 650/2,200 + 20)
         love.graphics.print(entidad1, 650/2,200 + 30)
         love.graphics.print(entidad2, 650/2,200 + 40)
-        love.graphics.print(jugador.encontacto, 650/2,200 + 50)
+       -- love.graphics.print(jugador.encontacto, 650/2,200 + 50)
     end
     love.graphics.setColor(1, 1, 1)
     

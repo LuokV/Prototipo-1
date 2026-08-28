@@ -13,7 +13,7 @@ jugador = {
     cuerpo = nil,
     forma = nil,
     acople = nil,
-    encontacto = 0,
+    --encontacto = 0,
 
     vidas = 3,
     cancion = 10,
@@ -22,7 +22,10 @@ jugador = {
     --Animaciones
     correr_der = nil,
     correr_izq = nil,
-    salto = nil
+    salto = nil,
+
+    --Flag para determinar si el jugador puede saltar
+    puede_saltar = true
 }
 
 
@@ -63,30 +66,36 @@ dx=0
     if love.keyboard.isDown("right") then
         dx = jugador.velocidad_x
         jugador.correr_der.activado = true
-        if contacto and  nx > 0.5 and ny < 0.5 then
+        jugador.correr_izq.activado = false
+        if entidad2 == "Pared" or entidad2 == "Plataforma" and  nx > 0.5 and ny < 0.5  then
             dx = 0
         end
     elseif love.keyboard.isDown("left") then
         dx = - jugador.velocidad_x
         jugador.correr_izq.activado = true
-          if contacto and nx < 0.5 and ny < 0.5 then
+        if entidad2 == "Pared" or entidad2 == "Plataforma" and nx < 0.5 and ny < 0.5 then
             dx = 0
         end
+        
     else jugador.correr_der.activado = false
          jugador.correr_izq.activado = false
          jugador.salto.activado = false
     end
 
-    if jugador.encontacto > 0  then
-
-       if love.keyboard.isDown("up") then
-        dy = - jugador.velocidad_y
-       end
-
+    if  love.keyboard.isDown("up")  then
+        if jugador.puede_saltar then
+            dy = - jugador.velocidad_y
+            jugador.puede_saltar = false
+        end
+    end
+ 
+    if not jugador.puede_saltar then
+        jugador.salto.activado = true
     end
 
-    if jugador.encontacto == 0 then
-        jugador.salto.activado = true
+-- Envita que salte fuera de la ventana
+    if jugador.cuerpo:getY() < 5 then
+        dy = 0
     end
 
 jugador.cuerpo:setLinearVelocity(dx,dy)
@@ -95,7 +104,7 @@ ActualizarAnimacion(jugador.correr_der,dt, false)
 ActualizarAnimacion(jugador.correr_izq,dt, false)
 ActualizarAnimacion(jugador.salto,dt, false)
 
-    -- Hitbox para colision con Notas Musicales (posiblemente se cambie mas adelante)
+-- Hitbox para colision con Notas Musicales (posiblemente se cambie mas adelante)
 jugador.hitbox_x = jugador.cuerpo:getX() - jugador.origen_x
 jugador.hitbox_y = jugador.cuerpo:getY() - jugador.origen_y
 
