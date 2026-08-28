@@ -17,6 +17,8 @@ function Estructuras:Nuevo(x, y, ruta, tag, escalax, escalay)
     plataforma.acople = love.physics.newFixture(plataforma.cuerpo, plataforma.forma)
     plataforma.acople:setUserData(tag)
 
+    plataforma.acople:setFriction (0) -- Evita que el jugador pueda agarrarse a las estructuras
+
     return plataforma
 
 end

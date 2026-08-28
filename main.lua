@@ -15,7 +15,7 @@ entidad2 = nil
 contacto = false
 nx, ny = nil
 
-depurar = true
+depurar = false
 
 ataque = nil
 ataque2 = nil
@@ -33,7 +33,7 @@ sonidos = {
     victoria = love.audio.newSource("sounds/victoria.wav", "stream"),
     derrota = love.audio.newSource("sounds/derrota.wav", "stream"),
     sfx_hit = love.audio.newSource("sounds/hit.wav", "static"),
-    sfx_whoosh = love.audio.newSource("sounds/whoosh.wav", "static")
+    sfx_whoosh = love.audio.newSource("sounds/whoosh.wav", "static"),
 }
 
 ---------------------------- FUNCIONES -----------------------------------
@@ -42,31 +42,38 @@ sonidos = {
 
 -- Por cuerpo físico
 function iniciarContacto(a,b,col)
-    contacto = true
 
-  --[[  if a:getUserData() == "jugador" or b:getUserData() == "jugador" then
+    contacto = true
+    nx,ny = col:getNormal()
+
+    if a:getUserData() == "jugador" or b:getUserData() == "jugador" then
         jugador.encontacto = jugador.encontacto + 1
     end
-    ]]
-
-    if a:getUserData() == "jugador" and b:getUserData() == "Piso" or a:getUserData() == "jugador" and b:getUserData() == "Plataforma" then
+      
+    if a:getUserData() == "jugador" and b:getUserData() == "Piso" or
+       a:getUserData() == "jugador" and b:getUserData() == "Plataforma"  then
+       if ny > 0.5 then -- Soloe permite saltar si esta en la parte SUPERIOR
         jugador.puede_saltar = true
+       end 
     end
 
     entidad1 = a:getUserData()
     entidad2 = b:getUserData()
-
-    nx,ny = col:getNormal()
+  
 end
 
 function terminarContacto(a,b,col)
     contacto = false
+  
 
-  --[[  if a:getUserData() == "jugador" or b:getUserData() == "jugador" then
+    if a:getUserData() == "jugador" or b:getUserData() == "jugador" then
         jugador.encontacto = jugador.encontacto - 1
     end
-    ]]
-    
+
+    if jugador.encontacto == 0 then
+    jugador.puede_saltar = false -- Evita saltar "en caida"
+    end
+
     entidad1 = nil
     entidad2 = nil
 end
@@ -94,6 +101,8 @@ function debugHitboxes()
         jugador.Debug()
         nota_roja:Debug()
         nota_verde:Debug()
+        nota_azul:Debug()
+        nota_amarilla:Debug()
         love.graphics.setColor(1, 1, 1)
 end
 
@@ -140,7 +149,7 @@ function love.load()
     lienzo = love.graphics.newCanvas(ventana.ancho, ventana.alto)
 
     --Inicializacion del Jugador
-    jugador.Crear(ventana.ancho/2, 130)
+    jugador.Crear(ventana.ancho/2, 70)
 
     --Iniciar Notas // ARREGLAR BUG DEL ESCALADO
     nota_roja = NotasMusicales:Nueva(130, 130, "img/Rojo.png", 10, 1, "sounds/cortar.wav")
@@ -201,10 +210,10 @@ function love.update(dt)
     nota_amarilla.atrapado = nota_amarilla:Colisiones()
 
    --Función que verifica quien recibio el golpe y las condiciones de derrota/victoria
-    --nota_roja:Golpe(nota_roja, ataque)
-    --nota_verde:Golpe(nota_verde, ataque2)
-    --nota_azul:Golpe(nota_azul, ataque3)
-    --nota_amarilla:Golpe(nota_amarilla, ataque4)
+   nota_roja:Golpe(ataque)
+   nota_verde:Golpe(ataque2)
+   nota_azul:Golpe(ataque3)
+   nota_amarilla:Golpe(ataque4)
 
 end
 
@@ -257,8 +266,11 @@ function love.draw()
         love.graphics.print("CHOQUE", 650/2,200 + 20)
         love.graphics.print(entidad1, 650/2,200 + 30)
         love.graphics.print(entidad2, 650/2,200 + 40)
-       -- love.graphics.print(jugador.encontacto, 650/2,200 + 50)
+        love.graphics.print(jugador.encontacto, 650/2,200 + 50)
     end
+
+    love.graphics.setColor(1, 1, 0)
+    love.graphics.print ("Presiona Q W E R para golpear las notas segun su color correspondiente",100,500 + 20)
     love.graphics.setColor(1, 1, 1)
     
 end
