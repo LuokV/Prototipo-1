@@ -1,6 +1,6 @@
 # Prototipo-1
 
-Prototipo 1 para "Programación de Videojuegos II"
+Prototipo 1 para "Programación de Videojuegos II" - Lucía Victoria Naranjo
 
 
 
