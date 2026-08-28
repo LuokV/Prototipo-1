@@ -67,14 +67,18 @@ dx=0
         dx = jugador.velocidad_x
         jugador.correr_der.activado = true
         jugador.correr_izq.activado = false
-        if entidad2 == "Pared" or entidad2 == "Plataforma" and  nx > 0.5 and ny < 0.5  then
+        if entidad2 == "Pared" or (entidad2 == "Plataforma" and ny < 0.5)  then
+           if dx > 0 and nx > 0.5 then
             dx = 0
+           end 
         end
     elseif love.keyboard.isDown("left") then
         dx = - jugador.velocidad_x
         jugador.correr_izq.activado = true
-        if entidad2 == "Pared" or entidad2 == "Plataforma" and nx < 0.5 and ny < 0.5 then
+        if entidad2 == "Pared" or (entidad2 == "Plataforma" and ny < 0.5)  then
+            if dx < 0 and nx < 0.5 then
             dx = 0
+           end 
         end
         
     else jugador.correr_der.activado = false
