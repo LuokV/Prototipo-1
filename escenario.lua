@@ -33,18 +33,18 @@ end
 ---- FUNCIONES PARA CARGAR y DIBUJAR EL ESCENARIO RESPECTIVAMENTE
 
 function CrearEscenario()
-    columnaizquieda = Estructuras:Nuevo(6, 144/2, "img/Wall.png", tag1, 0.75, 1)
-    columnaderecha = Estructuras: Nuevo(154,144/2,"img/Wall.png", tag1, 0.75, 1)
+    columnaizquieda = Estructuras:Nuevo(ventana.ancho-(ventana.ancho-6), ventana.alto/2, "img/Wall.png", tag1, 0.75, 1.38)
+    columnaderecha = Estructuras: Nuevo(ventana.ancho-6,ventana.alto/2,"img/Wall.png", tag1, 0.75, 1.38)
 
-    piso = Estructuras:Nuevo(160/2, 140, "img/Floor.png", tag2, 1, 1)
+    piso = Estructuras:Nuevo(ventana.ancho/2, ventana.alto-5, "img/Floor.png", tag2, 1.5, 1)
 
     --plataformas sin sprites
-    centro = Estructuras:Nuevo(ventana.ancho/2, ventana.alto/2, "img/Floor.png", tag3, 0.25, 0.50)
+    centro = Estructuras:Nuevo(ventana.ancho/2, ventana.alto/2 + 5, "img/Floor.png", tag3, 0.25, 0.50)
 
-    superior_izq = Estructuras:Nuevo(40, 40, "img/Floor.png", tag3, 0.20, 0.50)
-    superior_der = Estructuras:Nuevo(120, 40, "img/Floor.png", tag3, 0.20, 0.50)
-    inferior_izq = Estructuras:Nuevo(40, 110, "img/Floor.png", tag3, 0.20, 0.50)
-    inferior_der = Estructuras:Nuevo(120, 110, "img/Floor.png", tag3, 0.20, 0.50)
+    superior_izq = Estructuras:Nuevo(50, 60, "img/Floor.png", tag3, 0.20, 0.50)
+    superior_der = Estructuras:Nuevo(190, 60, "img/Floor.png", tag3, 0.20, 0.50)
+    inferior_izq = Estructuras:Nuevo(50, 150, "img/Floor.png", tag3, 0.20, 0.50)
+    inferior_der = Estructuras:Nuevo(190, 150, "img/Floor.png", tag3, 0.20, 0.50)
 end
 
 --NOTA: El cuerpo FISICO se origina desde el centro, mientras que los SPRITES desde la esquina superior izq

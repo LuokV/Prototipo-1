@@ -5,9 +5,9 @@ require ("animaciones")
 
 -- VENTANA     (pensado para un juego pixel art)
 ventana = {
-ancho = 160,
-alto = 144,
-escala = 4
+ancho = 240,
+alto = 200,
+escala = 3.5
 }
 
 entidad1 = nil
@@ -15,7 +15,7 @@ entidad2 = nil
 contacto = false
 nx, ny = nil
 
-depurar = false
+depurar = true
 
 ataque = nil
 ataque2 = nil
@@ -142,7 +142,7 @@ function love.load()
 
     --MUSICA
     sonidos.musica:setLooping(true)
-    sonidos.musica:setVolume(0.70) -- 0 a 1
+    sonidos.musica:setVolume(0.40) -- 0 a 1
     love.audio.play(sonidos.musica)
 
     -- Incializacion del Canvas
@@ -210,10 +210,10 @@ function love.update(dt)
     nota_amarilla.atrapado = nota_amarilla:Colisiones()
 
    --Función que verifica quien recibio el golpe y las condiciones de derrota/victoria
-   nota_roja:Golpe(ataque)
-   nota_verde:Golpe(ataque2)
-   nota_azul:Golpe(ataque3)
-   nota_amarilla:Golpe(ataque4)
+ --  nota_roja:Golpe(ataque)
+   --nota_verde:Golpe(ataque2)
+  -- nota_azul:Golpe(ataque3)
+ --  nota_amarilla:Golpe(ataque4)
 
 end
 
