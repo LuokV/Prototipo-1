@@ -1,149 +1,166 @@
-jugador = {
-    x= 0,
-    y = 0,
-    velocidad_x = 60,
-    velocidad_y = 120,
-    ancho = 0,
-    alto = 0,
-    origen_x = 0,
-    origen_y = 0,
-    hitbox_x = 0,
-    hitbox_y = 0,
-    sprite = nil,
-    cuerpo = nil,
-    forma = nil,
-    acople = nil,
-    encontacto = 0,
-
-    vidas = 3,
-    cancion = 10,
-    notas = 0,
-
-    --Animaciones
-    correr_der = nil,
-    correr_izq = nil,
-    salto = nil,
-
-    --Sonidos
-    salto_sonido = love.audio.newSource("sounds/jump.wav", "static"),
-    caminar = love.audio.newSource("sounds/pasos.wav", "static"),
-
-    --Flag para determinar si el jugador puede saltar
-    puede_saltar = true,
-}
-
+Class = require 'lib.class'
+Jugador = Class {}
 
 local tag = "jugador"
 
 --INICIALIZACIÓN
-function jugador.Crear(x, y)
+function Jugador:init(x, y)
 
-    jugador.x = x
-    jugador.y = y
-    jugador.sprite = love.graphics.newImage("img/Ninja.png")
-    jugador.ancho = jugador.sprite:getWidth()
-    jugador.alto = jugador.sprite:getHeight()
-    jugador.origen_x = jugador.ancho/2
-    jugador.origen_y = jugador.alto/2
-    jugador.cuerpo = love.physics.newBody(world, x, y, "dynamic")
-    jugador.forma = love.physics.newRectangleShape(jugador.sprite:getWidth(), jugador.sprite:getHeight())
-    jugador.acople = love.physics.newFixture(jugador.cuerpo, jugador.forma)
+    self.x = x
+    self.y = y
+    self.velocidad_x = 60
+    self.velocidad_y = 120
+    self.sprite = love.graphics.newImage("img/Ninja.png")
+    self.ancho = self.sprite:getWidth()
+    self.alto = self.sprite:getHeight()
+    self.hitbox_x = 0
+    self.hitbox_y = 0
+    self.origen_x = self.ancho/2
+    self.origen_y = self.alto/2
+    self.cuerpo = love.physics.newBody(world, x, y, "dynamic")
+    self.forma = love.physics.newRectangleShape(self.sprite:getWidth(), self.sprite:getHeight())
+    self.acople = love.physics.newFixture(self.cuerpo, self.forma)
+
+    self.encontacto = 0
+
+    ----Tipos de ataques musicales de jugador
+  
+    self.ataque = CrearAnimacion("img/CortarSprites.png",3,32,32,12, false, 32, 0)
+    self.ataque.activado = false
+
+    self.ataque2 = CrearAnimacion("img/AuraSprites.png",4,25,24,12, false, 25, 0)
+    self.ataque2.activado = false
+
+    self.ataque3 = CrearAnimacion("img/AuraSprites.png",4,25,24,12, false, 25, 0)
+    self.ataque3.activado = false
+
+    self.ataque4 = CrearAnimacion("img/AuraSprites.png",4,25,24,12, false, 25, 0)
+    self.ataque4.activado = false
+
+
+    self.vidas = 3
+    self.cancion = 10
+    self.notas = 0
 
     --Animaciones
-    jugador.correr_der = CrearAnimacion("img/NinjaSprites.png",3,16,16,12, true, 48, 16)
-    jugador.correr_izq = CrearAnimacion("img/NinjaSprites.png",3,16,16,12, true, 32, 16)
-    jugador.salto = CrearAnimacion("img/NinjaSprites.png",0,16,16,2, false, 16, 96)
+    self.correr_der = CrearAnimacion("img/NinjaSprites.png",3,16,16,12, true, 48, 16)
+    self.correr_izq = CrearAnimacion("img/NinjaSprites.png",3,16,16,12, true, 32, 16)
+    self.salto = CrearAnimacion("img/NinjaSprites.png",0,16,16,2, false, 16, 96)
     -----------
 
-    jugador.acople:setUserData(tag)
+    self.acople:setUserData(tag)
 
-    jugador.cuerpo:setFixedRotation(true)
+    self.cuerpo:setFixedRotation(true)
+
+    --Sonidos
+    self.salto_sonido = love.audio.newSource("sounds/jump.wav", "static")
+    self.caminar = love.audio.newSource("sounds/pasos.wav", "static")
+
+    --Flag para determinar si el jugador puede saltar
+    self.puede_saltar = true
 end
 
 
 --ACTUALIZAR
-function jugador.Actualizar(dt)
+function Jugador:Actualizar(dt)
 
-local dx, dy = jugador.cuerpo:getLinearVelocity()
+local dx, dy = self.cuerpo:getLinearVelocity()
 dx=0 -- Evita que el jugador se deslice por el piso
 
     if love.keyboard.isDown("right") then
-        dx = jugador.velocidad_x
+        dx = self.velocidad_x
         
-        if not jugador.puede_saltar then
-            love.audio.stop(jugador.caminar)
-            else love.audio.play(jugador.caminar)
+        if not self.puede_saltar then
+            love.audio.stop(self.caminar)
+            else love.audio.play(self.caminar)
         end
 
-        jugador.correr_der.activado = true
-        jugador.correr_izq.activado = false
-        jugador.salto.activado = false
+        self.correr_der.activado = true
+        self.correr_izq.activado = false
+        self.salto.activado = false
     
     elseif love.keyboard.isDown("left") then
-        dx = - jugador.velocidad_x
+        dx = - self.velocidad_x
         
-        if not jugador.puede_saltar then
+        if not self.puede_saltar then
             love.audio.stop(jugador.caminar)
-            else love.audio.play(jugador.caminar)
+            else love.audio.play(self.caminar)
         end
         
-        jugador.correr_izq.activado = true
-        jugador.salto.activado = false
+        self.correr_izq.activado = true
+        self.salto.activado = false
 
 
         --IDLE -- esto podría ser una función que devuelva booleanos para verificar si se esta moviendo
-    else jugador.correr_der.activado = false
-         jugador.correr_izq.activado = false
-         jugador.salto.activado = false
-         if jugador.caminar:isPlaying()then
-            love.audio.stop(jugador.caminar)
+    else self.correr_der.activado = false
+         self.correr_izq.activado = false
+         self.salto.activado = false
+         if self.caminar:isPlaying()then
+            love.audio.stop(self.caminar)
          end
     end
 
     if  love.keyboard.isDown("up")  then
-        if jugador.puede_saltar then
-            dy = - jugador.velocidad_y
-            love.audio.play(jugador.salto_sonido)
-            jugador.puede_saltar = false
+        if self.puede_saltar then
+            dy = - self.velocidad_y
+            love.audio.play(self.salto_sonido)
+            self.puede_saltar = false
         end
     end
  
-    if not jugador.puede_saltar then
-        jugador.salto.activado = true
+    if not self.puede_saltar then
+        self.salto.activado = true
     end
 
 -- Envita que salte fuera de la ventana
-    if jugador.cuerpo:getY() < 5 then
+    if self.cuerpo:getY() < 5 then
         dy = 0
     end
 
-jugador.cuerpo:setLinearVelocity(dx,dy)
+self.cuerpo:setLinearVelocity(dx,dy)
 
-ActualizarAnimacion(jugador.correr_der,dt, false)
-ActualizarAnimacion(jugador.correr_izq,dt, false)
-ActualizarAnimacion(jugador.salto,dt, false)
+ActualizarAnimacion(self.correr_der,dt, false)
+ActualizarAnimacion(self.correr_izq,dt, false)
+ActualizarAnimacion(self.salto,dt, false)
 
 -- Hitbox para colision con Notas Musicales (posiblemente se cambie mas adelante)
-jugador.hitbox_x = jugador.cuerpo:getX() - jugador.origen_x
-jugador.hitbox_y = jugador.cuerpo:getY() - jugador.origen_y
+self.hitbox_x = self.cuerpo:getX() - self.origen_x
+self.hitbox_y = self.cuerpo:getY() - self.origen_y
+
+-- Animaciones de ataque del juegaor
+ActualizarAnimacion(self.ataque,dt, true)
+ActualizarAnimacion(self.ataque2,dt, true)
+ActualizarAnimacion(self.ataque3,dt, true)
+ActualizarAnimacion(self.ataque4,dt, true)
 
 end
 
 --DIBUJAR
-function jugador.Dibujar()
-    --love.graphics.polygon("fill", jugador.cuerpo:getWorldPoints(jugador.forma:getPoints()))
+function Jugador:Dibujar()
     
-DibujarAnimacion(jugador.correr_der, redondear(jugador.cuerpo:getX()), redondear(jugador. cuerpo:getY()), jugador.origen_x, jugador.origen_y)
-DibujarAnimacion(jugador.correr_izq, redondear(jugador.cuerpo:getX()), redondear(jugador. cuerpo:getY()), jugador.origen_x, jugador.origen_y)
-DibujarAnimacion(jugador.salto, redondear(jugador.cuerpo:getX()), redondear(jugador. cuerpo:getY()), jugador.origen_x, jugador.origen_y)
+DibujarAnimacion(self.correr_der, redondear(self.cuerpo:getX()), redondear(self. cuerpo:getY()), self.origen_x, self.origen_y)
+DibujarAnimacion(self.correr_izq, redondear(self.cuerpo:getX()), redondear(self. cuerpo:getY()), self.origen_x, self.origen_y)
+DibujarAnimacion(self.salto, redondear(self.cuerpo:getX()), redondear(self. cuerpo:getY()), self.origen_x, self.origen_y)
 
-    if not jugador.correr_der.activado and not jugador.correr_izq.activado and not jugador.salto.activado then
-        love.graphics.draw(jugador.sprite, redondear(jugador.cuerpo:getX()), redondear(jugador.cuerpo:getY()), 0,1,1, jugador.origen_x, jugador.origen_y)
+  if not self.correr_der.activado and not self.correr_izq.activado and not self.salto.activado then
+        love.graphics.draw(self.sprite, redondear(self.cuerpo:getX()), redondear(self.cuerpo:getY()), 0,1,1, self.origen_x, self.origen_y)
     end
+
+------ Dibujar Ataque 
+love.graphics.setColor(1, 0, 0)
+DibujarAnimacion(self.ataque, redondear(self.cuerpo:getX()), redondear(self.cuerpo:getY()), self.origen_x + 8, self.origen_y + 8)
+love.graphics.setColor(0, 1, 0)
+DibujarAnimacion(self.ataque2, redondear(self.cuerpo:getX()), redondear(self.cuerpo:getY()), self.origen_x + 5, self.origen_y + 5)
+love.graphics.setColor(0, 0, 1)
+DibujarAnimacion(self.ataque3, redondear(self.cuerpo:getX()), redondear(self.cuerpo:getY()), self.origen_x + 5, self.origen_y + 5)
+love.graphics.setColor(1, 1, 0)
+DibujarAnimacion(self.ataque4, redondear(self.cuerpo:getX()), redondear(self.cuerpo:getY()), self.origen_x + 5, self.origen_y + 5)
+love.graphics.setColor(1, 1, 1)
+
 end
 
 --DEBUG
-function jugador.Debug()
-    love.graphics.rectangle("line", redondear(jugador.hitbox_x), redondear(jugador.hitbox_y), jugador.ancho, jugador.alto)
-    love.graphics.circle("fill", redondear(jugador.cuerpo:getX()), redondear(jugador.cuerpo:getY()), 1)
+function Jugador:Debug()
+    love.graphics.rectangle("line", redondear(self.hitbox_x), redondear(self.hitbox_y), self.ancho, self.alto)
+    love.graphics.circle("fill", redondear(self.cuerpo:getX()), redondear(self.cuerpo:getY()), 1)
 end

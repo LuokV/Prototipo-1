@@ -17,11 +17,6 @@ nx, ny = nil
 
 depurar = true
 
-ataque = nil
-ataque2 = nil
-ataque3 = nil
-ataque4 = nil
-color = nil
 
 derrota = false
 victoria = false
@@ -98,7 +93,7 @@ end
 
 function debugHitboxes()
         love.graphics.setColor(0, 1, 0)
-        jugador.Debug()
+        jugador:Debug()
         nota_roja:Debug()
         nota_verde:Debug()
         nota_azul:Debug()
@@ -111,17 +106,17 @@ end
 function love.keypressed(key, scancode, isrepeat)
     if key == "f1" then
         depurar = not depurar
-    elseif key == "q" and not ataque.activado then
-        ataque.activado =true
+    elseif key == "q" and not jugador.ataque.activado then
+        jugador.ataque.activado =true
         love.audio.play(sonidos.sfx_whoosh)
-    elseif key == "w" and not ataque2.activado then
-        ataque2.activado =true
+    elseif key == "w" and not jugador.ataque2.activado then
+        jugador.ataque2.activado =true
         love.audio.play(sonidos.sfx_whoosh)
-    elseif key == "e" and not ataque3.activado then
-        ataque3.activado =true
+    elseif key == "e" and not jugador.ataque3.activado then
+        jugador.ataque3.activado =true
         love.audio.play(sonidos.sfx_whoosh)
-    elseif key == "r" and not ataque4.activado then
-        ataque4.activado =true
+    elseif key == "r" and not jugador.ataque4.activado then
+        jugador.ataque4.activado =true
         love.audio.play(sonidos.sfx_whoosh)
     end 
 end
@@ -149,26 +144,13 @@ function love.load()
     lienzo = love.graphics.newCanvas(ventana.ancho, ventana.alto)
 
     --Inicializacion del Jugador
-    jugador.Crear(ventana.ancho/2, 70)
+    jugador = Jugador(ventana.ancho/2, 70)
 
     --Iniciar Notas // ARREGLAR BUG DEL ESCALADO
     nota_roja = NotasMusicales:Nueva(130, 130, "img/Rojo.png", 10, 1, "sounds/cortar.wav")
     nota_verde = NotasMusicales:Nueva(130,130, "img/Verde.png", 20, 1, "sounds/colision.wav")
     nota_azul = NotasMusicales:Nueva(130,130, "img/Azul.png", 10, 1, "sounds/espada.wav")
     nota_amarilla = NotasMusicales:Nueva(130,130, "img/Amarillo.png", 10, 1, "sounds/pium.mp3")
-
-    -- Ataques musicalesl
-    ataque = CrearAnimacion("img/CortarSprites.png",3,32,32,12, false, 32, 0)
-    ataque.activado = false
-
-    ataque2 = CrearAnimacion("img/AuraSprites.png",4,25,24,12, false, 25, 0)
-    ataque2.activado = false
-
-    ataque3 = CrearAnimacion("img/AuraSprites.png",4,25,24,12, false, 25, 0)
-    ataque3.activado = false
-
-    ataque4 = CrearAnimacion("img/AuraSprites.png",4,25,24,12, false, 25, 0)
-    ataque4.activado = false
 
     -- Posiciones de notas musicales
     math.randomseed(os.time())
@@ -189,13 +171,7 @@ function love.update(dt)
 
     world:update(dt)
 
-    jugador.Actualizar(dt)
-
-    -- Animaciones de ataque del juegaor
-    ActualizarAnimacion(ataque,dt, true)
-    ActualizarAnimacion(ataque2,dt, true)
-    ActualizarAnimacion(ataque3,dt, true)
-    ActualizarAnimacion(ataque4,dt, true)
+    jugador:Actualizar(dt)
 
     --Movimiento de las notas musicales
     nota_roja:Actualizar(jugador.cuerpo:getX(), jugador.cuerpo:getY(), jugador.ancho, jugador.alto, dt)
@@ -210,10 +186,10 @@ function love.update(dt)
     nota_amarilla.atrapado = nota_amarilla:Colisiones()
 
    --Función que verifica quien recibio el golpe y las condiciones de derrota/victoria
- --  nota_roja:Golpe(ataque)
-   --nota_verde:Golpe(ataque2)
-  -- nota_azul:Golpe(ataque3)
- --  nota_amarilla:Golpe(ataque4)
+ nota_roja:Golpe(jugador.ataque)
+   --nota_verde:Golpe(jugado.ataque2)
+  -- nota_azul:Golpe(jugador.ataque3)
+ --  nota_amarilla:Golpe(jugador.ataque4)
 
 end
 
@@ -225,16 +201,6 @@ function love.draw()
     DibujarEscenario()
 
     jugador:Dibujar()
-
-    love.graphics.setColor(1, 0, 0)
-    DibujarAnimacion(ataque, redondear(jugador.cuerpo:getX()), redondear(jugador.cuerpo:getY()), jugador.origen_x + 8, jugador.origen_y + 8)
-    love.graphics.setColor(0, 1, 0)
-    DibujarAnimacion(ataque2, redondear(jugador.cuerpo:getX()), redondear(jugador.cuerpo:getY()), jugador.origen_x + 5, jugador.origen_y + 5)
-    love.graphics.setColor(0, 0, 1)
-    DibujarAnimacion(ataque3, redondear(jugador.cuerpo:getX()), redondear(jugador.cuerpo:getY()), jugador.origen_x + 5, jugador.origen_y + 5)
-    love.graphics.setColor(1, 1, 0)
-    DibujarAnimacion(ataque4, redondear(jugador.cuerpo:getX()), redondear(jugador.cuerpo:getY()), jugador.origen_x + 5, jugador.origen_y + 5)
-    love.graphics.setColor(1, 1, 1)
 
     nota_roja:Dibujar()
     nota_verde:Dibujar()
