@@ -30,6 +30,8 @@ sonidos = {
     sfx_whoosh = love.audio.newSource("sounds/whoosh.wav", "static"),
 }
 
+notas_musicales = {}
+
 ---------------------------- FUNCIONES -----------------------------------
 
 -- COLISIONES
@@ -84,19 +86,24 @@ end
 function debugUI()
     love.graphics.setColor(0, 1, 0)
     love.graphics.print("FPS: "..love.timer.getFPS(), 10, 10)
-    if nota_roja.atrapado or nota_verde.atrapado then
+
+    for i, notas in ipairs(notas_musicales) do
+       if notas.atrapado then
         love.graphics.print("ATRAPADO", 100, 10)
+       end
     end
+
     love.graphics.setColor(1, 1, 1)
 end
 
 function debugHitboxes()
         love.graphics.setColor(0, 1, 0)
         jugador:Debug()
-        nota_roja:Debug()
-        nota_verde:Debug()
-        nota_azul:Debug()
-        nota_amarilla:Debug()
+      
+        for i, notas in ipairs(notas_musicales) do
+            notas:Debug()
+        end
+
         love.graphics.setColor(1, 1, 1)
 end
 
@@ -145,18 +152,17 @@ function love.load()
     --Inicializacion del Jugador
     jugador = Jugador(ventana.ancho/2, 70)
 
-    --Iniciar Notas // ARREGLAR BUG DEL ESCALADO
-    nota_roja = NotasMusicales(130, 130, "img/Rojo.png", 10, 1, "sounds/cortar.wav")
-    nota_verde = NotasMusicales(130,130, "img/Verde.png", 20, 1, "sounds/colision.wav")
-    nota_azul = NotasMusicales(130,130, "img/Azul.png", 10, 1, "sounds/espada.wav")
-    nota_amarilla = NotasMusicales(130,130, "img/Amarillo.png", 10, 1, "sounds/pium.mp3")
+    --Iniciar Notas 
+    table.insert(notas_musicales, NotasMusicales(130, 130, "img/Rojo.png", 10, 1, "sounds/cortar.wav", jugador.ataque))
+    table.insert(notas_musicales, NotasMusicales(130,130, "img/Verde.png", 20, 1, "sounds/colision.wav", jugador.ataque2))
+    table.insert(notas_musicales, NotasMusicales(130,130, "img/Azul.png", 10, 1, "sounds/espada.wav", jugador.ataque3))
+    table.insert(notas_musicales, NotasMusicales(130,130, "img/Amarillo.png", 10, 1, "sounds/pium.mp3", jugador.ataque4))
 
     -- Posiciones de notas musicales
     math.randomseed(os.time())
-    nota_roja:PosicionarNota()
-    nota_verde:PosicionarNota()
-    nota_azul:PosicionarNota()
-    nota_amarilla:PosicionarNota()
+    for i, notas in ipairs(notas_musicales) do
+        notas:PosicionarNota()
+    end
 
     CrearEscenario()
 end
@@ -173,22 +179,19 @@ function love.update(dt)
     jugador:Actualizar(dt)
 
     --Movimiento de las notas musicales
-    nota_roja:Actualizar(jugador.cuerpo:getX(), jugador.cuerpo:getY(), jugador.ancho, jugador.alto, dt)
-    nota_verde:Actualizar(jugador.cuerpo:getX(), jugador.cuerpo:getY(), jugador.ancho, jugador.alto, dt)
-    nota_azul:Actualizar(jugador.cuerpo:getX(), jugador.cuerpo:getY(), jugador.ancho, jugador.alto, dt)
-    nota_amarilla:Actualizar(jugador.cuerpo:getX(), jugador.cuerpo:getY(), jugador.ancho, jugador.alto, dt)
+    for i, notas in ipairs(notas_musicales) do
+        notas:Actualizar(jugador.cuerpo:getX(), jugador.cuerpo:getY(), jugador.ancho, jugador.alto, dt)
+    end
 
     --Verificación de colision de las notas musicales con el juegador
-    nota_roja.atrapado = nota_roja:Colisiones()
-    nota_verde.atrapado = nota_verde:Colisiones()
-    nota_azul.atrapado = nota_azul:Colisiones()
-    nota_amarilla.atrapado = nota_amarilla:Colisiones()
+    for i, notas in ipairs(notas_musicales) do
+        notas.atrapado = notas:Colisiones()
+    end
 
    --Función que verifica quien recibio el golpe y las condiciones de derrota/victoria
- --nota_roja:Golpe(jugador.ataque)
-   --nota_verde:Golpe(jugado.ataque2)
-  -- nota_azul:Golpe(jugador.ataque3)
- --  nota_amarilla:Golpe(jugador.ataque4)
+    for i, notas in ipairs(notas_musicales) do
+        notas:Golpe()
+    end
 
 end
 
@@ -201,10 +204,10 @@ function love.draw()
 
     jugador:Dibujar()
 
-    nota_roja:Dibujar()
-    nota_verde:Dibujar()
-    nota_azul:Dibujar()
-    nota_amarilla:Dibujar()
+    for i, notas in ipairs(notas_musicales) do
+        notas:Dibujar()
+    end
+
 
     if depurar then
         debugHitboxes()

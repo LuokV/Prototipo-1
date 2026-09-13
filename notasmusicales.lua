@@ -5,7 +5,7 @@ NotasMusicales = Class {}
 
 --Inicializacion
 
-function NotasMusicales:init(x, y, ruta, velocidad, escala, ruta_sonido)
+function NotasMusicales:init(x, y, ruta, velocidad, escala, ruta_sonido, ataque_jugador)
 
     self.x = x
     self.y = y
@@ -24,6 +24,7 @@ function NotasMusicales:init(x, y, ruta, velocidad, escala, ruta_sonido)
     self.velocidad = velocidad
     self.atrapado = false
     self.sonido =  love.audio.newSource(ruta_sonido, "static")
+    self.debil_a = ataque_jugador
    
 end
 
@@ -64,10 +65,11 @@ function NotasMusicales:PosicionarNota()
 end
 
 -- En caso de colision, controla el cambio de los valores de las variables dependiendo de quien recibio el golpe
-function NotasMusicales:Golpe(tipoataque)
+function NotasMusicales:Golpe()
+    
     if self.atrapado then
         self:PosicionarNota()
-        if tipoataque.activado then
+        if self.debil_a.activado then
             jugador.notas = jugador.notas + 1
             love.audio.play(self.sonido)
             if jugador.notas == jugador.cancion then
