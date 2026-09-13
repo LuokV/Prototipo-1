@@ -3,7 +3,7 @@ Jugador = Class {}
 local tag = "jugador"
 
 --INICIALIZACIÓN
-function Jugador:init(x, y)
+function Jugador:init(x, y, world)
 
     self.x = x
     self.y = y
@@ -81,7 +81,7 @@ dx=0 -- Evita que el jugador se deslice por el piso
         dx = - self.velocidad_x
         
         if not self.puede_saltar then
-            love.audio.stop(jugador.caminar)
+            love.audio.stop(self.caminar)
             else love.audio.play(self.caminar)
         end
         

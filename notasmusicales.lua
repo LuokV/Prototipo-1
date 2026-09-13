@@ -28,7 +28,7 @@ end
 
 -- FUNCIONES DE COMPORTAMIENTO
 
-function NotasMusicales:Colisiones()
+function NotasMusicales:Colisiones(jugador)
     local x1 = jugador.hitbox_x
     local y1 = jugador.hitbox_y
     local ancho1 = jugador.ancho
@@ -63,7 +63,7 @@ function NotasMusicales:PosicionarNota()
 end
 
 -- En caso de colision, controla el cambio de los valores de las variables dependiendo de quien recibio el golpe
-function NotasMusicales:Golpe()
+function NotasMusicales:Golpe(jugador)
     
     if self.atrapado then
         self:PosicionarNota()
