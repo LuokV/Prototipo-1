@@ -1,7 +1,4 @@
-require ("escenario")
-require ("jugador")
-require ("notasmusicales")
-require ("animaciones")
+require 'dependencias'
 
 -- VENTANA     (pensado para un juego pixel art)
 ventana = {
@@ -60,7 +57,6 @@ end
 
 function terminarContacto(a,b,col)
     contacto = false
-  
 
     if a:getUserData() == "jugador" or b:getUserData() == "jugador" then
         jugador.encontacto = jugador.encontacto - 1

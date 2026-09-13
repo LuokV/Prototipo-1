@@ -1,6 +1,4 @@
 -- Objetivo y "enemigo" del juego 
-
-Class = require 'lib.class'
 NotasMusicales = Class {}
 
 --Inicializacion

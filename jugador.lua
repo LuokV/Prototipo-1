@@ -1,4 +1,3 @@
-Class = require 'lib.class'
 Jugador = Class {}
 
 local tag = "jugador"
@@ -23,6 +22,10 @@ function Jugador:init(x, y)
 
     self.encontacto = 0
 
+    self.vidas = 3
+    self.cancion = 10
+    self.notas = 0
+
     ----Tipos de ataques musicales de jugador
   
     self.ataque = CrearAnimacion("img/CortarSprites.png",3,32,32,12, false, 32, 0)
@@ -36,11 +39,6 @@ function Jugador:init(x, y)
 
     self.ataque4 = CrearAnimacion("img/AuraSprites.png",4,25,24,12, false, 25, 0)
     self.ataque4.activado = false
-
-
-    self.vidas = 3
-    self.cancion = 10
-    self.notas = 0
 
     --Animaciones
     self.correr_der = CrearAnimacion("img/NinjaSprites.png",3,16,16,12, true, 48, 16)
