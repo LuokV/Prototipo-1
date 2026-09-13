@@ -17,7 +17,6 @@ nx, ny = nil
 
 depurar = true
 
-
 derrota = false
 victoria = false
 
@@ -147,10 +146,10 @@ function love.load()
     jugador = Jugador(ventana.ancho/2, 70)
 
     --Iniciar Notas // ARREGLAR BUG DEL ESCALADO
-    nota_roja = NotasMusicales:Nueva(130, 130, "img/Rojo.png", 10, 1, "sounds/cortar.wav")
-    nota_verde = NotasMusicales:Nueva(130,130, "img/Verde.png", 20, 1, "sounds/colision.wav")
-    nota_azul = NotasMusicales:Nueva(130,130, "img/Azul.png", 10, 1, "sounds/espada.wav")
-    nota_amarilla = NotasMusicales:Nueva(130,130, "img/Amarillo.png", 10, 1, "sounds/pium.mp3")
+    nota_roja = NotasMusicales(130, 130, "img/Rojo.png", 10, 1, "sounds/cortar.wav")
+    nota_verde = NotasMusicales(130,130, "img/Verde.png", 20, 1, "sounds/colision.wav")
+    nota_azul = NotasMusicales(130,130, "img/Azul.png", 10, 1, "sounds/espada.wav")
+    nota_amarilla = NotasMusicales(130,130, "img/Amarillo.png", 10, 1, "sounds/pium.mp3")
 
     -- Posiciones de notas musicales
     math.randomseed(os.time())
@@ -186,7 +185,7 @@ function love.update(dt)
     nota_amarilla.atrapado = nota_amarilla:Colisiones()
 
    --Función que verifica quien recibio el golpe y las condiciones de derrota/victoria
- nota_roja:Golpe(jugador.ataque)
+ --nota_roja:Golpe(jugador.ataque)
    --nota_verde:Golpe(jugado.ataque2)
   -- nota_azul:Golpe(jugador.ataque3)
  --  nota_amarilla:Golpe(jugador.ataque4)

@@ -57,7 +57,7 @@ function Jugador:init(x, y)
     self.caminar = love.audio.newSource("sounds/pasos.wav", "static")
 
     --Flag para determinar si el jugador puede saltar
-    self.puede_saltar = true
+    self.puede_saltar = false
 end
 
 

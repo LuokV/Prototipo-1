@@ -1,34 +1,29 @@
 -- Objetivo y "enemigo" del juego 
 
-NotasMusicales = {}
-NotasMusicales.__index = NotasMusicales
+Class = require 'lib.class'
+NotasMusicales = Class {}
 
 --Inicializacion
 
-function NotasMusicales:Nueva(x, y, ruta, velocidad, escala, ruta_sonido)
+function NotasMusicales:init(x, y, ruta, velocidad, escala, ruta_sonido)
 
-    local o = setmetatable({}, NotasMusicales)
-
-    o.x = x
-    o.y = y
-    o.inicial_x = 130
-    o.inicial_y = 130
-    o.escala = escala
-    o.sprite = love.graphics.newImage(ruta)
-    o.ancho = o.sprite:getWidth()
-    o.alto = o.sprite:getHeight()
-    o.origen_x = o.ancho/2 
-    o.origen_y = o.alto/2 
-    o.hitbox_x = 0
-    o.hitbox_y = 0
-    o.hitbox_ancho = 0
-    o.hitbox_alto = 0
-    o.velocidad = velocidad
-    o.atrapado = false
-    o.sonido =  love.audio.newSource(ruta_sonido, "static")
-    
-    
-    return o
+    self.x = x
+    self.y = y
+    self.inicial_x = 130
+    self.inicial_y = 130
+    self.escala = escala
+    self.sprite = love.graphics.newImage(ruta)
+    self.ancho = self.sprite:getWidth()
+    self.alto = self.sprite:getHeight()
+    self.origen_x = self.ancho/2 
+    self.origen_y = self.alto/2 
+    self.hitbox_x = 0
+    self.hitbox_y = 0
+    self.hitbox_ancho = 0
+    self.hitbox_alto = 0
+    self.velocidad = velocidad
+    self.atrapado = false
+    self.sonido =  love.audio.newSource(ruta_sonido, "static")
    
 end
 
