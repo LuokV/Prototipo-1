@@ -79,6 +79,7 @@ function NotasMusicales:Golpe(jugador)
              love.audio.play(sonidos.sfx_hit)
              if jugador.vidas == 0 then
                 derrota = true
+                maquina_EstadoGlobal:cambiar('derrota')
                 love.audio.stop(sonidos.musica)
                 love.audio.play(sonidos.derrota)
              end

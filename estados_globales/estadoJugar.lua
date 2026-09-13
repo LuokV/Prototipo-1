@@ -1,41 +1,72 @@
 EstadoJugar = Class {__includes = Estado}
 
+-- Variables globales
+
+    derrota = false
+    victoria = false
+
+    
 -- COLISIONES 
 -- Por cuerpo físico
-function iniciarContacto(a,b,col)
+function EstadoJugar:iniciarContacto(a,b,col)
 
-    contacto = true
-    nx,ny = col:getNormal()
+    if not self.jugador or not self.jugador.cuerpo or not col or col:isDestroyed() then
+        return
+    end
+
+    if a:isDestroyed() or b:isDestroyed() then
+        return
+    end
+
+    self.contacto = true
+
+    local nx, ny = col:getNormal()
+    if not nx or not ny then return end
 
     if a:getUserData() == "jugador" or b:getUserData() == "jugador" then
-        estado.jugador.encontacto = estado.jugador.encontacto + 1
+        self.jugador.encontacto = self.jugador.encontacto + 1
     end
+
+    local toco_piso = false
       
     if a:getUserData() == "jugador" and b:getUserData() == "Piso" or
        a:getUserData() == "jugador" and b:getUserData() == "Plataforma"  then
-       if ny > 0.5 then -- Soloe permite saltar si esta en la parte SUPERIOR
-        estado.jugador.puede_saltar = true
+       if ny > 0.5 then -- Solo permite saltar si esta en la parte SUPERIOR
+        toco_piso = true
        end 
+       elseif b:getUserData() == "jugador" and (a:getUserData() == "Piso" or a:getUserData() == "Plataforma") then
+        if ny < -0.5 then 
+            toco_piso = true 
+        end
     end
 
-    entidad1 = a:getUserData()
-    entidad2 = b:getUserData()
+    if toco_piso then
+        self.jugador.puede_saltar = true
+    end
+
+    self.entidad1 = a:getUserData()
+    self.entidad2 = b:getUserData()
   
 end
 
-function terminarContacto(a,b,col)
-    contacto = false
+function EstadoJugar:terminarContacto(a,b,col)
+
+     if not self.jugador then
+        return
+    end
+
+    self.contacto = false
 
     if a:getUserData() == "jugador" or b:getUserData() == "jugador" then
-        estado.jugador.encontacto = estado.jugador.encontacto - 1
+        self.jugador.encontacto = self.jugador.encontacto - 1
     end
 
-    if estado.jugador.encontacto == 0 then
-    estado.jugador.puede_saltar = false -- Evita saltar "en caida"
+    if self.jugador.encontacto == 0 then
+    self.jugador.puede_saltar = false -- Evita saltar "en caida"
     end
 
-    entidad1 = nil
-    entidad2 = nil
+    self.entidad1 = nil
+    self.entidad2 = nil
 end
 
 -- DEBUG
@@ -63,12 +94,81 @@ function EstadoJugar:debugHitboxes()
         love.graphics.setColor(1, 1, 1)
 end
 
+-- INPUT
+function EstadoJugar:keypressed(key)
+
+    if key == "f1" then
+        self.depurar = not self.depurar
+    end
+
+    self.jugador:keypressed(key) -- Pasa la tecla al jugador para que su funcion se encargue si coinciden
+ 
+end
+
+-- Reiniciar EstadoJugar
+
+function EstadoJugar:reiniciar()
+
+    self.world:setCallbacks(nil,nil,nil,nil)
+
+    self.world:destroy()
+
+    self.world = nil
+
+    collectgarbage("collect")
+
+    derrota = false
+    victoria = false
+
+    self.world = love.physics.newWorld(0,9.81*16,true)
+
+    self.jugador = Jugador(ventana.ancho/2, 70, self.world)
+
+    self.escenario = CrearEscenario(self.world)
+
+    self.world:setCallbacks(
+        function (a, b, col) self:iniciarContacto(a,b,col)end,
+        function (a, b, col) self:terminarContacto(a,b,col)end
+    )
+
+    self.notas_musicales = nil
+
+    self.notas_musicales = {}
+
+    table.insert(self.notas_musicales, NotasMusicales(130, 130, "img/Rojo.png", 10, 1, "sounds/cortar.wav", self.jugador.ataque))
+    table.insert(self.notas_musicales, NotasMusicales(130,130, "img/Verde.png", 20, 1, "sounds/colision.wav", self.jugador.ataque2))
+    table.insert(self.notas_musicales, NotasMusicales(130,130, "img/Azul.png", 10, 1, "sounds/espada.wav", self.jugador.ataque3))
+    table.insert(self.notas_musicales, NotasMusicales(130,130, "img/Amarillo.png", 10, 1, "sounds/pium.mp3", self.jugador.ataque4))
+
+    math.randomseed(os.time())
+    for i, notas in ipairs(self.notas_musicales) do
+        notas:PosicionarNota()
+    end
+
+end
+
+---INICIALIZAR
+
 function EstadoJugar:init()
+
+    self.entidad1 = nil
+    self.entidad2 = nil
+    self.contacto = false
+
+    self.depurar = true
 
     --Inicializacion del mundo fisico
     love.physics.setMeter(32)
     self.world = love.physics.newWorld(0,9.81*16,true)
-    self.world:setCallbacks(iniciarContacto, terminarContacto)
+
+    --Inicializacion del Jugador
+    self.jugador = Jugador(ventana.ancho/2, 70, self.world)
+    CrearEscenario(self.world)
+
+    self.world:setCallbacks(
+        function (a, b, col) self:iniciarContacto(a,b,col)end,
+        function (a, b, col) self:terminarContacto(a,b,col)end
+    )
 
     --MUSICA
     sonidos.musica:setLooping(true)
@@ -76,9 +176,6 @@ function EstadoJugar:init()
     love.audio.play(sonidos.musica)
 
     self.notas_musicales = {}
-
-    --Inicializacion del Jugador
-    self.jugador = Jugador(ventana.ancho/2, 70, self.world)
 
     --Iniciar Notas 
     table.insert(self.notas_musicales, NotasMusicales(130, 130, "img/Rojo.png", 10, 1, "sounds/cortar.wav", self.jugador.ataque))
@@ -91,16 +188,27 @@ function EstadoJugar:init()
     for i, notas in ipairs(self.notas_musicales) do
         notas:PosicionarNota()
     end
-
-    CrearEscenario(self.world)
+   
 end   
 
-function EstadoJugar:ingresar() end
+-- Cada vez que se entra al juego desde el titulo luego de ganar o perder, se reinicia
+function EstadoJugar:ingresar()
+    
+    self:reiniciar()
+
+end
+
 function EstadoJugar:salir() end
+
+-- ACTUALIZAR
 
 function EstadoJugar:actualizar(dt)
 
     if derrota or victoria then
+        if love.keyboard.isDown ("r") then
+            self:reiniciar()
+            return
+        end
         return
     end
 
@@ -125,6 +233,8 @@ function EstadoJugar:actualizar(dt)
 
 end
 
+-- DIBUJAR
+
 function EstadoJugar:dibujar()
 
     love.graphics.setCanvas(lienzo)
@@ -138,7 +248,7 @@ function EstadoJugar:dibujar()
         notas:Dibujar()
     end
 
-    if depurar then
+    if self.depurar then
        self:debugHitboxes()
     end
 
@@ -146,7 +256,7 @@ function EstadoJugar:dibujar()
 
     love.graphics.draw(lienzo, 0, 0, 0, ventana.escala, ventana.escala)
 
-   if depurar then
+   if self.depurar then
        self:debugUI()
     end
 
@@ -159,10 +269,10 @@ function EstadoJugar:dibujar()
     end
 
     love.graphics.setColor(1, 0, 0)
-    if contacto then
+    if self.contacto then
         love.graphics.print("CHOQUE", 650/2,200 + 20)
-        love.graphics.print(entidad1, 650/2,200 + 30)
-        love.graphics.print(entidad2, 650/2,200 + 40)
+        love.graphics.print(self.entidad1, 650/2,200 + 30)
+        love.graphics.print(self.entidad2, 650/2,200 + 40)
         love.graphics.print(self.jugador.encontacto, 650/2,200 + 50)
     end
 

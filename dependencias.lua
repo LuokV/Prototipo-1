@@ -11,3 +11,7 @@ require ("animaciones")
 require "estados_globales.estado"
 require "estados_globales.estadoJugar"
 require "estados_globales.estadoTitulo"
+require "estados_globales.estadoDerrota"
+
+-- Importar Maquinas de Estdos
+require "maquinas_de_estado.maquinaEstadosGlobal"

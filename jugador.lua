@@ -1,6 +1,22 @@
 Jugador = Class {}
 
-local tag = "jugador"
+function Jugador:keypressed(key)
+
+    if key == "q" and not self.ataque.activado then
+        self.ataque.activado =true
+        love.audio.play(sonidos.sfx_whoosh)
+    elseif key == "w" and not self.ataque2.activado then
+        self.ataque2.activado =true
+        love.audio.play(sonidos.sfx_whoosh)
+    elseif key == "e" and not self.ataque3.activado then
+        self.ataque3.activado =true
+        love.audio.play(sonidos.sfx_whoosh)
+    elseif key == "r" and not self.ataque4.activado then
+        self.ataque4.activado =true
+        love.audio.play(sonidos.sfx_whoosh)
+    end
+    
+end
 
 --INICIALIZACIÓN
 function Jugador:init(x, y, world)
@@ -46,7 +62,7 @@ function Jugador:init(x, y, world)
     self.salto = CrearAnimacion("img/NinjaSprites.png",0,16,16,2, false, 16, 96)
     -----------
 
-    self.acople:setUserData(tag)
+    self.acople:setUserData("jugador")
 
     self.cuerpo:setFixedRotation(true)
 
