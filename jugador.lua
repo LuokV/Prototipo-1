@@ -156,9 +156,9 @@ DibujarAnimacion(self.correr_der, redondear(self.cuerpo:getX()), redondear(self.
 DibujarAnimacion(self.correr_izq, redondear(self.cuerpo:getX()), redondear(self. cuerpo:getY()), self.origen_x, self.origen_y)
 DibujarAnimacion(self.salto, redondear(self.cuerpo:getX()), redondear(self. cuerpo:getY()), self.origen_x, self.origen_y)
 
-  if not self.correr_der.activado and not self.correr_izq.activado and not self.salto.activado then
-        love.graphics.draw(self.sprite, redondear(self.cuerpo:getX()), redondear(self.cuerpo:getY()), 0,1,1, self.origen_x, self.origen_y)
-    end
+if not self.correr_der.activado and not self.correr_izq.activado and not self.salto.activado then
+    love.graphics.draw(self.sprite, redondear(self.cuerpo:getX()), redondear(self.cuerpo:getY()), 0,1,1, self.origen_x, self.origen_y)
+end
 
 ------ Dibujar Ataque 
 love.graphics.setColor(1, 0, 0)

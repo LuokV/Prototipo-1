@@ -16,6 +16,9 @@ sonidos = {
     sfx_whoosh = love.audio.newSource("sounds/whoosh.wav", "static"),
 }
 
+fuente = nil
+fuente_small = nil
+
 ---------------------------- FUNCIONES -----------------------------------
 
 -- REDONDEO ya que se trabaja con pixel art
@@ -55,6 +58,9 @@ function love.load()
 
     -- Incializacion del Canvas
     lienzo = love.graphics.newCanvas(ventana.ancho, ventana.alto)
+
+    fuente = love.graphics.newFont('fuentes/font.ttf', 40)
+    fuente_small = love.graphics.newFont('fuentes/font.ttf', 30)
 
     maquina_EstadoGlobal = MaquinaEstadoGlobal {
         ['jugar'] = function () return EstadoJugar()end,

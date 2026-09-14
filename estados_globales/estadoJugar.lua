@@ -72,7 +72,7 @@ end
 -- DEBUG
 function EstadoJugar:debugUI()
     love.graphics.setColor(0, 1, 0)
-    love.graphics.print("FPS: "..love.timer.getFPS(), 10, 10)
+    love.graphics.print("FPS: "..love.timer.getFPS(), 350, 650)
 
     for i, notas in ipairs(self.notas_musicales) do
        if notas.atrapado then
@@ -240,6 +240,8 @@ function EstadoJugar:dibujar()
     love.graphics.setCanvas(lienzo)
     love.graphics.clear()
 
+    love.graphics.setFont(fuente_small)
+
     DibujarEscenario()
 
     self.jugador:Dibujar()
@@ -270,14 +272,11 @@ function EstadoJugar:dibujar()
 
     love.graphics.setColor(1, 0, 0)
     if self.contacto then
-        love.graphics.print("CHOQUE", 650/2,200 + 20)
-        love.graphics.print(self.entidad1, 650/2,200 + 30)
-        love.graphics.print(self.entidad2, 650/2,200 + 40)
-        love.graphics.print(self.jugador.encontacto, 650/2,200 + 50)
+        love.graphics.print("CHOQUE", 650/2,220)
+        love.graphics.print(self.entidad1, 650/2,260)
+        love.graphics.print(self.entidad2, 650/2,300)
+        love.graphics.print(self.jugador.encontacto, 650/2,330)
     end
-
-    love.graphics.setColor(1, 1, 0)
-    love.graphics.print ("Presiona Q W E R para golpear las notas segun su color correspondiente",100,500 + 20)
     love.graphics.setColor(1, 1, 1)
 
 end
