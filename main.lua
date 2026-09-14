@@ -29,9 +29,9 @@ end
 -- INTERACCION INPUT
 function love.keypressed(key, scancode, isrepeat)
 
-    if key == "return" then
+    if key == "return" and maquina_EstadoGlobal.nombre_actual ~= 'jugar' then
         maquina_EstadoGlobal:cambiar('jugar')
-        return 
+        return  
     end
 
     if key == "escape" then

@@ -17,6 +17,7 @@ function MaquinaEstadoGlobal:cambiar(nombreEstado, parametrosIniciales)
     self.actual:salir()
     self.actual = self.estados_globales [nombreEstado] ()
     self.actual:ingresar (parametrosIniciales)
+    self.nombre_actual = nombreEstado
 end
 
 function MaquinaEstadoGlobal:actualizar(dt)
