@@ -6,7 +6,7 @@ EstadoJugar = Class {__includes = Estado}
     victoria = false
 
     tiempo_spawn = 0
-    intervalo_spawn = 0.5
+    intervalo_spawn = 1.5
 
 ------------------------------------- COLISIONES 
 -- Por cuerpo físico
@@ -109,12 +109,7 @@ end
 ------------------------------------------------- GENERACION de NotasMusicales ALEATORIAS
 
 function EstadoJugar:generarNotaMusical()
-    local notas_posibles = {
-        {ruta = "img/Rojo.png", escala = 1, ruta_sonido = "sounds/cortar.wav", ataque_jugador = self.jugador.ataque},
-        {ruta = "img/Verde.png", escala =  1, ruta_sonido = "sounds/colision.wav", ataque_jugador = self.jugador.ataque2},
-        {ruta =  "img/Azul.png", escala = 1, ruta_sonido = "sounds/espada.wav", ataque_jugador = self.jugador.ataque3},
-        {ruta = "img/Amarillo.png", escala = 1, ruta_sonido = "sounds/pium.mp3", ataque_jugador = self.jugador.ataque4}
-    }
+    local notas_posibles = Listado_Notas(self.jugador)
     local nota_elegida = notas_posibles[math.random(#notas_posibles)]
     local velocidad_nota = math.random(5,30)
     local nueva_notamusical = NotasMusicales(
@@ -258,10 +253,9 @@ function EstadoJugar:dibujar()
         notas:Dibujar()
     end
 
-    love.graphics.print("Notas: " .. #self.notas_musicales, 40, ventana.alto/2)
-
     if self.depurar then
        self:debugHitboxes()
+       love.graphics.print("Notas: " .. #self.notas_musicales, 40, ventana.alto/2)
     end
 
     love.graphics.setCanvas()
@@ -281,7 +275,7 @@ function EstadoJugar:dibujar()
     end
 
     love.graphics.setColor(1, 0, 0)
-    if self.contacto then
+    if self.contacto and self.depurar then
         love.graphics.print("CHOQUE", 650/2,220)
         love.graphics.print(self.entidad1, 650/2,260)
         love.graphics.print(self.entidad2, 650/2,300)
