@@ -3,12 +3,10 @@ NotasMusicales = Class {}
 
 --Inicializacion
 
-function NotasMusicales:init(x, y, ruta, velocidad, escala, ruta_sonido, ataque_jugador)
+function NotasMusicales:init(ruta, velocidad, escala, ruta_sonido, ataque_jugador)
 
-    self.x = x
-    self.y = y
-    self.inicial_x = 130
-    self.inicial_y = 130
+    self.x = 0
+    self.y = 0
     self.escala = escala
     self.sprite = love.graphics.newImage(ruta)
     self.ancho = self.sprite:getWidth()

@@ -5,8 +5,10 @@ EstadoJugar = Class {__includes = Estado}
     derrota = false
     victoria = false
 
-    
--- COLISIONES 
+    tiempo_spawn = 0
+    intervalo_spawn = 0
+
+------------------------------------- COLISIONES 
 -- Por cuerpo físico
 function EstadoJugar:iniciarContacto(a,b,col)
 
@@ -46,12 +48,11 @@ function EstadoJugar:iniciarContacto(a,b,col)
 
     self.entidad1 = a:getUserData()
     self.entidad2 = b:getUserData()
-  
 end
 
 function EstadoJugar:terminarContacto(a,b,col)
 
-     if not self.jugador then
+    if not self.jugador then
         return
     end
 
@@ -69,7 +70,7 @@ function EstadoJugar:terminarContacto(a,b,col)
     self.entidad2 = nil
 end
 
--- DEBUG
+------------------------------------------ DEBUG
 function EstadoJugar:debugUI()
     love.graphics.setColor(0, 1, 0)
     love.graphics.print("FPS: "..love.timer.getFPS(), 350, 650)
@@ -94,7 +95,7 @@ function EstadoJugar:debugHitboxes()
         love.graphics.setColor(1, 1, 1)
 end
 
--- INPUT
+-------------------------------------------- INPUT TECLADO
 function EstadoJugar:keypressed(key)
 
     if key == "f1" then
@@ -105,7 +106,7 @@ function EstadoJugar:keypressed(key)
  
 end
 
--- Reiniciar EstadoJugar
+-------------------- Reiniciar EstadoJugar
 
 function EstadoJugar:reiniciar()
 
@@ -135,10 +136,10 @@ function EstadoJugar:reiniciar()
 
     self.notas_musicales = {}
 
-    table.insert(self.notas_musicales, NotasMusicales(130, 130, "img/Rojo.png", 10, 1, "sounds/cortar.wav", self.jugador.ataque))
-    table.insert(self.notas_musicales, NotasMusicales(130,130, "img/Verde.png", 20, 1, "sounds/colision.wav", self.jugador.ataque2))
-    table.insert(self.notas_musicales, NotasMusicales(130,130, "img/Azul.png", 10, 1, "sounds/espada.wav", self.jugador.ataque3))
-    table.insert(self.notas_musicales, NotasMusicales(130,130, "img/Amarillo.png", 10, 1, "sounds/pium.mp3", self.jugador.ataque4))
+    table.insert(self.notas_musicales, NotasMusicales("img/Rojo.png", 10, 1, "sounds/cortar.wav", self.jugador.ataque))
+    table.insert(self.notas_musicales, NotasMusicales("img/Verde.png", 20, 1, "sounds/colision.wav", self.jugador.ataque2))
+    table.insert(self.notas_musicales, NotasMusicales("img/Azul.png", 10, 1, "sounds/espada.wav", self.jugador.ataque3))
+    table.insert(self.notas_musicales, NotasMusicales("img/Amarillo.png", 10, 1, "sounds/pium.mp3", self.jugador.ataque4))
 
     math.randomseed(os.time())
     for i, notas in ipairs(self.notas_musicales) do
@@ -147,7 +148,7 @@ function EstadoJugar:reiniciar()
 
 end
 
----INICIALIZAR
+----------------------INICIALIZAR-------------------------
 
 function EstadoJugar:init()
 
@@ -178,10 +179,10 @@ function EstadoJugar:init()
     self.notas_musicales = {}
 
     --Iniciar Notas 
-    table.insert(self.notas_musicales, NotasMusicales(130, 130, "img/Rojo.png", 10, 1, "sounds/cortar.wav", self.jugador.ataque))
-    table.insert(self.notas_musicales, NotasMusicales(130,130, "img/Verde.png", 20, 1, "sounds/colision.wav", self.jugador.ataque2))
-    table.insert(self.notas_musicales, NotasMusicales(130,130, "img/Azul.png", 10, 1, "sounds/espada.wav", self.jugador.ataque3))
-    table.insert(self.notas_musicales, NotasMusicales(130,130, "img/Amarillo.png", 10, 1, "sounds/pium.mp3", self.jugador.ataque4))
+    table.insert(self.notas_musicales, NotasMusicales("img/Rojo.png", 10, 1, "sounds/cortar.wav", self.jugador.ataque))
+    table.insert(self.notas_musicales, NotasMusicales("img/Verde.png", 20, 1, "sounds/colision.wav", self.jugador.ataque2))
+    table.insert(self.notas_musicales, NotasMusicales("img/Azul.png", 10, 1, "sounds/espada.wav", self.jugador.ataque3))
+    table.insert(self.notas_musicales, NotasMusicales("img/Amarillo.png", 10, 1, "sounds/pium.mp3", self.jugador.ataque4))
 
     -- Posiciones de notas musicales
     math.randomseed(os.time())
@@ -200,7 +201,7 @@ end
 
 function EstadoJugar:salir() end
 
--- ACTUALIZAR
+----------------------ACTUALIZAR-------------------------
 
 function EstadoJugar:actualizar(dt)
 
@@ -233,7 +234,7 @@ function EstadoJugar:actualizar(dt)
 
 end
 
--- DIBUJAR
+----------------------DIBUJAR-------------------------
 
 function EstadoJugar:dibujar()
 
