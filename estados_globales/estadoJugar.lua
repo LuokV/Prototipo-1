@@ -108,7 +108,14 @@ end
 
 ------------------------------------------------- GENERACION de NotasMusicales ALEATORIAS
 
-function EstadoJugar:generarNotaMusical()
+function EstadoJugar:generarNotaMusical(maximo_notas)
+
+    local limite_notas = maximo_notas
+    
+    if #self.notas_musicales >= limite_notas then
+        return
+    end
+
     local notas_posibles = Listado_Notas(self.jugador)
     local nota_elegida = notas_posibles[math.random(#notas_posibles)]
     local velocidad_nota = math.random(5,30)
@@ -121,6 +128,7 @@ function EstadoJugar:generarNotaMusical()
         )
     nueva_notamusical:PosicionarNota()
     table.insert(self.notas_musicales, nueva_notamusical)
+
 end
 
 -------------------- Reiniciar EstadoJugar
@@ -152,8 +160,7 @@ function EstadoJugar:reiniciar()
     self.notas_musicales = nil
 
     self.notas_musicales = {}
-
-    self:generarNotaMusical()
+    self:generarNotaMusical(5)
 
 end
 
@@ -216,11 +223,13 @@ function EstadoJugar:actualizar(dt)
 
     self.jugador:Actualizar(dt)
 
+    ---- Generación de notas musicales
     tiempo_spawn = tiempo_spawn + dt
     if tiempo_spawn >= intervalo_spawn then
-        self:generarNotaMusical()
+        self:generarNotaMusical(5)
         tiempo_spawn = 0
     end
+  
 
     --Movimiento de las notas musicales
     for i = #self.notas_musicales, 1, -1 do
