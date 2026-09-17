@@ -6,7 +6,7 @@ EstadoJugar = Class {__includes = Estado}
     victoria = false
 
     tiempo_spawn = 0
-    intervalo_spawn = 0
+    intervalo_spawn = 0.5
 
 ------------------------------------- COLISIONES 
 -- Por cuerpo físico
@@ -106,6 +106,28 @@ function EstadoJugar:keypressed(key)
  
 end
 
+------------------------------------------------- GENERACION de NotasMusicales ALEATORIAS
+
+function EstadoJugar:generarNotaMusical()
+    local notas_posibles = {
+        {ruta = "img/Rojo.png", escala = 1, ruta_sonido = "sounds/cortar.wav", ataque_jugador = self.jugador.ataque},
+        {ruta = "img/Verde.png", escala =  1, ruta_sonido = "sounds/colision.wav", ataque_jugador = self.jugador.ataque2},
+        {ruta =  "img/Azul.png", escala = 1, ruta_sonido = "sounds/espada.wav", ataque_jugador = self.jugador.ataque3},
+        {ruta = "img/Amarillo.png", escala = 1, ruta_sonido = "sounds/pium.mp3", ataque_jugador = self.jugador.ataque4}
+    }
+    local nota_elegida = notas_posibles[math.random(#notas_posibles)]
+    local velocidad_nota = math.random(5,30)
+    local nueva_notamusical = NotasMusicales(
+            nota_elegida.ruta, 
+            velocidad_nota, 
+            nota_elegida.escala, 
+            nota_elegida.ruta_sonido,
+            nota_elegida.ataque_jugador
+        )
+    nueva_notamusical:PosicionarNota()
+    table.insert(self.notas_musicales, nueva_notamusical)
+end
+
 -------------------- Reiniciar EstadoJugar
 
 function EstadoJugar:reiniciar()
@@ -136,15 +158,7 @@ function EstadoJugar:reiniciar()
 
     self.notas_musicales = {}
 
-    table.insert(self.notas_musicales, NotasMusicales("img/Rojo.png", 10, 1, "sounds/cortar.wav", self.jugador.ataque))
-    table.insert(self.notas_musicales, NotasMusicales("img/Verde.png", 20, 1, "sounds/colision.wav", self.jugador.ataque2))
-    table.insert(self.notas_musicales, NotasMusicales("img/Azul.png", 10, 1, "sounds/espada.wav", self.jugador.ataque3))
-    table.insert(self.notas_musicales, NotasMusicales("img/Amarillo.png", 10, 1, "sounds/pium.mp3", self.jugador.ataque4))
-
-    math.randomseed(os.time())
-    for i, notas in ipairs(self.notas_musicales) do
-        notas:PosicionarNota()
-    end
+    self:generarNotaMusical()
 
 end
 
@@ -178,17 +192,7 @@ function EstadoJugar:init()
 
     self.notas_musicales = {}
 
-    --Iniciar Notas 
-    table.insert(self.notas_musicales, NotasMusicales("img/Rojo.png", 10, 1, "sounds/cortar.wav", self.jugador.ataque))
-    table.insert(self.notas_musicales, NotasMusicales("img/Verde.png", 20, 1, "sounds/colision.wav", self.jugador.ataque2))
-    table.insert(self.notas_musicales, NotasMusicales("img/Azul.png", 10, 1, "sounds/espada.wav", self.jugador.ataque3))
-    table.insert(self.notas_musicales, NotasMusicales("img/Amarillo.png", 10, 1, "sounds/pium.mp3", self.jugador.ataque4))
-
-    -- Posiciones de notas musicales
     math.randomseed(os.time())
-    for i, notas in ipairs(self.notas_musicales) do
-        notas:PosicionarNota()
-    end
    
 end   
 
@@ -217,21 +221,24 @@ function EstadoJugar:actualizar(dt)
 
     self.jugador:Actualizar(dt)
 
+    tiempo_spawn = tiempo_spawn + dt
+    if tiempo_spawn >= intervalo_spawn then
+        self:generarNotaMusical()
+        tiempo_spawn = 0
+    end
+
     --Movimiento de las notas musicales
-    for i, notas in ipairs(self.notas_musicales) do
+    for i = #self.notas_musicales, 1, -1 do
+        local notas = self.notas_musicales [i]
         notas:Actualizar(self.jugador.cuerpo:getX(), self.jugador.cuerpo:getY(), self.jugador.ancho, self.jugador.alto, dt)
-    end
-
-    --Verificación de colision de las notas musicales con el juegador
-    for i, notas in ipairs(self.notas_musicales) do
+        --Verificación de colision de las notas musicales con el jugador
         notas.atrapado = notas:Colisiones(self.jugador)
-    end
-
-   --Función que verifica quien recibio el golpe y las condiciones de derrota/victoria
-    for i, notas in ipairs(self.notas_musicales) do
+        --Función que verifica quien recibio el golpe y las condiciones de derrota/victoria
         notas:Golpe(self.jugador)
+        if notas.atrapado then
+            table.remove(self.notas_musicales, i)
+        end
     end
-
 end
 
 ----------------------DIBUJAR-------------------------
@@ -250,6 +257,8 @@ function EstadoJugar:dibujar()
     for i, notas in ipairs(self.notas_musicales) do
         notas:Dibujar()
     end
+
+    love.graphics.print("Notas: " .. #self.notas_musicales, 40, ventana.alto/2)
 
     if self.depurar then
        self:debugHitboxes()

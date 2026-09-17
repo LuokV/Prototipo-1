@@ -64,7 +64,6 @@ end
 function NotasMusicales:Golpe(jugador)
     
     if self.atrapado then
-        self:PosicionarNota()
         if self.debil_a.activado then
             jugador.notas = jugador.notas + 1
             love.audio.play(self.sonido)
