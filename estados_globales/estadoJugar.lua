@@ -214,7 +214,11 @@ function EstadoJugar:salir() end
 function EstadoJugar:actualizar(dt)
 
     if derrota or victoria then
-        if love.keyboard.isDown ("r") then
+        if self.jugador and self.jugador.caminar:isPlaying() then
+            love.audio.stop(self.jugador.caminar)
+        end
+
+        if love.keyboard.isDown ("t") then
             self:reiniciar()
             return
         end
