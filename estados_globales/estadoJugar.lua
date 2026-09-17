@@ -152,6 +152,8 @@ function EstadoJugar:reiniciar()
 
     self.escenario = CrearEscenario(self.world)
 
+    love.audio.play(sonidos.musica)
+
     self.world:setCallbacks(
         function (a, b, col) self:iniciarContacto(a,b,col)end,
         function (a, b, col) self:terminarContacto(a,b,col)end

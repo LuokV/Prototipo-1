@@ -47,16 +47,16 @@ function NotasMusicales:PosicionarNota()
     local borde = math.random(1,4)
     if borde == 1 then
         self.x = math.random(0, ventana.ancho)
-        self.y = 0
+        self.y = -5
     elseif borde == 2 then
         self.x = math.random(0, ventana.ancho)
-        self.y = ventana.alto
+        self.y = ventana.alto +5
     elseif borde == 3 then
-        self.x = math.random(0, ventana.alto)
-        self.y = 0
+        self.x = -5
+        self.y = math.random(0, ventana.alto)
     elseif borde == 4 then
-        self.x = math.random(0, ventana.alto)
-        self.y = ventana.ancho
+        self.x = ventana.ancho +5
+        self.y = math.random(0, ventana.alto)
     end
 end
 
