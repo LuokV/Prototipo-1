@@ -217,11 +217,6 @@ function EstadoJugar:actualizar(dt)
         if self.jugador and self.jugador.caminar:isPlaying() then
             love.audio.stop(self.jugador.caminar)
         end
-
-        if love.keyboard.isDown ("t") then
-            self:reiniciar()
-            return
-        end
         return
     end
 

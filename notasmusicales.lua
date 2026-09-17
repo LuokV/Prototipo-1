@@ -1,6 +1,18 @@
 -- Objetivo y "enemigo" del juego 
 NotasMusicales = Class {}
 
+------ LISTADO de Notas Musicales
+
+function Listado_Notas(jugador)
+    local notas_posibles = {
+        {ruta = "img/Rojo.png", escala = 1, ruta_sonido = "sounds/cortar.wav", ataque_jugador = jugador.ataque},
+        {ruta = "img/Verde.png", escala =  1, ruta_sonido = "sounds/colision.wav", ataque_jugador = jugador.ataque2},
+        {ruta =  "img/Azul.png", escala = 1, ruta_sonido = "sounds/espada.wav", ataque_jugador = jugador.ataque3},
+        {ruta = "img/Amarillo.png", escala = 1, ruta_sonido = "sounds/pium.mp3", ataque_jugador = jugador.ataque4}
+    }
+    return notas_posibles
+end
+
 --Inicializacion
 
 function NotasMusicales:init(ruta, velocidad, escala, ruta_sonido, ataque_jugador)
@@ -69,6 +81,7 @@ function NotasMusicales:Golpe(jugador)
             love.audio.play(self.sonido)
             if jugador.notas == jugador.cancion then
                 victoria = true
+                maquina_EstadoGlobal:cambiar('victoria')
                 love.audio.stop(sonidos.musica)
                 love.audio.play(sonidos.victoria)
             end
@@ -83,17 +96,6 @@ function NotasMusicales:Golpe(jugador)
         end
     end
 end
-
-function Listado_Notas(jugador)
-    local notas_posibles = {
-        {ruta = "img/Rojo.png", escala = 1, ruta_sonido = "sounds/cortar.wav", ataque_jugador = jugador.ataque},
-        {ruta = "img/Verde.png", escala =  1, ruta_sonido = "sounds/colision.wav", ataque_jugador = jugador.ataque2},
-        {ruta =  "img/Azul.png", escala = 1, ruta_sonido = "sounds/espada.wav", ataque_jugador = jugador.ataque3},
-        {ruta = "img/Amarillo.png", escala = 1, ruta_sonido = "sounds/pium.mp3", ataque_jugador = jugador.ataque4}
-    }
-    return notas_posibles
-end
-
 
 ------ ACTUALIZACION --------
 
