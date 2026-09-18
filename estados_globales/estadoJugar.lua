@@ -98,6 +98,10 @@ end
 -------------------------------------------- INPUT TECLADO
 function EstadoJugar:keypressed(key)
 
+    if self.nivel_timer > 0 then
+        return
+    end
+
     if key == "f1" then
         self.depurar = not self.depurar
     end
@@ -108,9 +112,9 @@ end
 
 ------------------------------------------------- GENERACION de NotasMusicales ALEATORIAS
 
-function EstadoJugar:generarNotaMusical(maximo_notas)
+function EstadoJugar:generarNotaMusical()
 
-    local limite_notas = maximo_notas
+    local limite_notas = self.max_notas
     
     if #self.notas_musicales >= limite_notas then
         return
@@ -118,7 +122,7 @@ function EstadoJugar:generarNotaMusical(maximo_notas)
 
     local notas_posibles = Listado_Notas(self.jugador)
     local nota_elegida = notas_posibles[math.random(#notas_posibles)]
-    local velocidad_nota = math.random(5,30)
+    local velocidad_nota = math.random(self.velmin_notas,self.velmax_notas)
     local nueva_notamusical = NotasMusicales(
             nota_elegida.ruta, 
             velocidad_nota, 
@@ -143,12 +147,20 @@ function EstadoJugar:reiniciar()
 
     collectgarbage("collect")
 
+    self.objetivo_notas = 3
+    self.nivel = 1
+    self.nivel_timer = 3    
+
+    self.velmin_notas = 5
+    self.velmax_notas = 30
+    self.max_notas = 5
+
     derrota = false
     victoria = false
 
     self.world = love.physics.newWorld(0,9.81*16,true)
 
-    self.jugador = Jugador(ventana.ancho/2, 70, self.world)
+    self.jugador = Jugador(ventana.ancho/2, 90, self.world)
 
     self.escenario = CrearEscenario(self.world)
 
@@ -162,7 +174,7 @@ function EstadoJugar:reiniciar()
     self.notas_musicales = nil
 
     self.notas_musicales = {}
-    self:generarNotaMusical(5)
+    self:generarNotaMusical()
 
 end
 
@@ -176,12 +188,20 @@ function EstadoJugar:init()
 
     self.depurar = false
 
+    self.max_nivel = 3
+    self.nivel = 1 -- lvl inicial
+    self.objetivo_notas = 3 --- notas iniciales a alcanzar
+    self.nivel_timer = 3 -- cuenta regresiva para empezar el nivel
+    self.velmin_notas = 5
+    self.velmax_notas = 30
+    self.max_notas = 5
+
     --Inicializacion del mundo fisico
     love.physics.setMeter(32)
     self.world = love.physics.newWorld(0,9.81*16,true)
 
     --Inicializacion del Jugador
-    self.jugador = Jugador(ventana.ancho/2, 70, self.world)
+    self.jugador = Jugador(ventana.ancho/2, 90, self.world)
     CrearEscenario(self.world)
 
     self.world:setCallbacks(
@@ -217,6 +237,11 @@ function EstadoJugar:actualizar(dt)
         return
     end
 
+    if self.nivel_timer > 0 then
+        self.nivel_timer = self.nivel_timer - dt
+        return
+    end
+
     self.world:update(dt)
 
     self.jugador:Actualizar(dt)
@@ -224,23 +249,50 @@ function EstadoJugar:actualizar(dt)
     ---- Generación de notas musicales
     tiempo_spawn = tiempo_spawn + dt
     if tiempo_spawn >= intervalo_spawn then
-        self:generarNotaMusical(5)
+        self:generarNotaMusical()
         tiempo_spawn = 0
     end
   
-
     --Movimiento de las notas musicales
     for i = #self.notas_musicales, 1, -1 do
         local notas = self.notas_musicales [i]
         notas:Actualizar(self.jugador.cuerpo:getX(), self.jugador.cuerpo:getY(), self.jugador.ancho, self.jugador.alto, dt)
         --Verificación de colision de las notas musicales con el jugador
         notas.atrapado = notas:Colisiones(self.jugador)
-        --Función que verifica quien recibio el golpe y las condiciones de derrota/victoria
+        --Función que verifica quien recibio el golpe (jugador o nota musical)
         notas:Golpe(self.jugador)
         if notas.atrapado then
             table.remove(self.notas_musicales, i)
         end
     end
+
+    ----VICTORIA
+    if self.jugador.notas == self.objetivo_notas and self.jugador.notas > 0 then
+        if self.nivel < self.max_nivel then
+            self.nivel = self.nivel + 1
+            self.objetivo_notas = self.objetivo_notas + 2
+            self.nivel_timer = 3
+            self.velmin_notas = self.velmin_notas + 20
+            self.velmax_notas = self.velmax_notas + 20
+            self.max_notas = self.max_notas + 3
+            self.notas_musicales = {}
+            self.jugador = Jugador(ventana.ancho/2, 90, self.world)
+
+        elseif self.nivel == self.max_nivel then
+            victoria = true
+            maquina_EstadoGlobal:cambiar('victoria')
+            love.audio.stop(sonidos.musica)
+            love.audio.play(sonidos.victoria)
+            
+        end
+    ----DERROTA
+    elseif  self. jugador.vidas == 0 then
+        derrota = true
+        maquina_EstadoGlobal:cambiar('derrota', self.nivel)
+        love.audio.stop(sonidos.musica)
+        love.audio.play(sonidos.derrota)
+     end
+
 end
 
 ----------------------DIBUJAR-------------------------
@@ -273,12 +325,23 @@ function EstadoJugar:dibujar()
        self:debugUI()
     end
 
+    love.graphics.print("Nivel "..self.nivel, 250 ,10)
+
+      love.graphics.setFont(fuente)
+
+    if self.nivel_timer > 0 then
+        local tiempo_redondeado = redondear(self.nivel_timer)
+        love.graphics.printf(tiempo_redondeado, 0, 250, ventana.ancho * ventana.escala, 'center')
+    end
+
+    love.graphics.setFont(fuente_small)
+
     if not derrota then
         love.graphics.print("Vidas "..self.jugador.vidas, 60, 10)
     end
 
     if not victoria then
-        love.graphics.print("Objetivo Notas "..self.jugador.notas.."/"..self.jugador.cancion, 450 ,10)
+        love.graphics.print("Objetivo Notas "..self.jugador.notas.."/"..self.objetivo_notas, 450 ,10)
     end
 
     love.graphics.setColor(1, 0, 0)
