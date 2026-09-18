@@ -249,7 +249,7 @@ function EstadoJugar:actualizar(dt)
     ---- Generación de notas musicales
     tiempo_spawn = tiempo_spawn + dt
     if tiempo_spawn >= intervalo_spawn then
-        self:generarNotaMusical(5)
+        self:generarNotaMusical()
         tiempo_spawn = 0
     end
   
