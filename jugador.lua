@@ -20,6 +20,13 @@ end
 --INICIALIZACIÓN
 function Jugador:init(x, y, world)
 
+    self.maquinaEstados = MaquinaEstadoJugador{
+        ["idle"] = function () return EstadoIdle(self) end,
+        ["correr"] = function () return EstadoCorrer(self) end,
+        ["saltar"] = function () return EstadoSaltar(self) end,
+        ["atacar"] = function () return EstadoAtacar(self) end,
+    }
+
     self.x = x
     self.y = y
     self.velocidad_x = 60
@@ -112,12 +119,10 @@ dx=0 -- Evita que el jugador se deslice por el piso
          end
     end
 
-    if  love.keyboard.isDown("up")  then
-        if self.puede_saltar then
-            dy = - self.velocidad_y
-            love.audio.play(self.salto_sonido)
-            self.puede_saltar = false
-        end
+    if  love.keyboard.isDown("up") and self.puede_saltar  then
+        dy = - self.velocidad_y
+        love.audio.play(self.salto_sonido)
+        self.puede_saltar = false
     end
  
     if not self.puede_saltar then
