@@ -112,9 +112,9 @@ end
 
 ------------------------------------------------- GENERACION de NotasMusicales ALEATORIAS
 
-function EstadoJugar:generarNotaMusical(maximo_notas)
+function EstadoJugar:generarNotaMusical()
 
-    local limite_notas = maximo_notas
+    local limite_notas = self.max_notas
     
     if #self.notas_musicales >= limite_notas then
         return
@@ -122,7 +122,7 @@ function EstadoJugar:generarNotaMusical(maximo_notas)
 
     local notas_posibles = Listado_Notas(self.jugador)
     local nota_elegida = notas_posibles[math.random(#notas_posibles)]
-    local velocidad_nota = math.random(5,30)
+    local velocidad_nota = math.random(self.velmin_notas,self.velmax_notas)
     local nueva_notamusical = NotasMusicales(
             nota_elegida.ruta, 
             velocidad_nota, 
@@ -151,6 +151,10 @@ function EstadoJugar:reiniciar()
     self.nivel = 1
     self.nivel_timer = 3    
 
+    self.velmin_notas = 5
+    self.velmax_notas = 30
+    self.max_notas = 5
+
     derrota = false
     victoria = false
 
@@ -170,7 +174,7 @@ function EstadoJugar:reiniciar()
     self.notas_musicales = nil
 
     self.notas_musicales = {}
-    self:generarNotaMusical(5)
+    self:generarNotaMusical()
 
 end
 
@@ -188,6 +192,9 @@ function EstadoJugar:init()
     self.nivel = 1 -- lvl inicial
     self.objetivo_notas = 3 --- notas iniciales a alcanzar
     self.nivel_timer = 3 -- cuenta regresiva para empezar el nivel
+    self.velmin_notas = 5
+    self.velmax_notas = 30
+    self.max_notas = 5
 
     --Inicializacion del mundo fisico
     love.physics.setMeter(32)
@@ -265,6 +272,9 @@ function EstadoJugar:actualizar(dt)
             self.nivel = self.nivel + 1
             self.objetivo_notas = self.objetivo_notas + 2
             self.nivel_timer = 3
+            self.velmin_notas = self.velmin_notas + 20
+            self.velmax_notas = self.velmax_notas + 20
+            self.max_notas = self.max_notas + 3
             self.notas_musicales = {}
             self.jugador = Jugador(ventana.ancho/2, 90, self.world)
 
