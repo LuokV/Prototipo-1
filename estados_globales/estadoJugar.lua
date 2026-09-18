@@ -98,6 +98,10 @@ end
 -------------------------------------------- INPUT TECLADO
 function EstadoJugar:keypressed(key)
 
+    if self.nivel_timer > 0 then
+        return
+    end
+
     if key == "f1" then
         self.depurar = not self.depurar
     end
@@ -145,14 +149,14 @@ function EstadoJugar:reiniciar()
 
     self.objetivo_notas = 3
     self.nivel = 1
-    
+    self.nivel_timer = 3    
 
     derrota = false
     victoria = false
 
     self.world = love.physics.newWorld(0,9.81*16,true)
 
-    self.jugador = Jugador(ventana.ancho/2, 70, self.world)
+    self.jugador = Jugador(ventana.ancho/2, 90, self.world)
 
     self.escenario = CrearEscenario(self.world)
 
@@ -183,13 +187,14 @@ function EstadoJugar:init()
     self.max_nivel = 3
     self.nivel = 1 -- lvl inicial
     self.objetivo_notas = 3 --- notas iniciales a alcanzar
+    self.nivel_timer = 3 -- cuenta regresiva para empezar el nivel
 
     --Inicializacion del mundo fisico
     love.physics.setMeter(32)
     self.world = love.physics.newWorld(0,9.81*16,true)
 
     --Inicializacion del Jugador
-    self.jugador = Jugador(ventana.ancho/2, 70, self.world)
+    self.jugador = Jugador(ventana.ancho/2, 90, self.world)
     CrearEscenario(self.world)
 
     self.world:setCallbacks(
@@ -225,6 +230,11 @@ function EstadoJugar:actualizar(dt)
         return
     end
 
+    if self.nivel_timer > 0 then
+        self.nivel_timer = self.nivel_timer - dt
+        return
+    end
+
     self.world:update(dt)
 
     self.jugador:Actualizar(dt)
@@ -254,8 +264,9 @@ function EstadoJugar:actualizar(dt)
         if self.nivel < self.max_nivel then
             self.nivel = self.nivel + 1
             self.objetivo_notas = self.objetivo_notas + 2
-            self.jugador.notas = 0
-            self.jugador.vidas = 3
+            self.nivel_timer = 3
+            self.notas_musicales = {}
+            self.jugador = Jugador(ventana.ancho/2, 90, self.world)
 
         elseif self.nivel == self.max_nivel then
             victoria = true
@@ -305,6 +316,15 @@ function EstadoJugar:dibujar()
     end
 
     love.graphics.print("Nivel "..self.nivel, 250 ,10)
+
+      love.graphics.setFont(fuente)
+
+    if self.nivel_timer > 0 then
+        local tiempo_redondeado = redondear(self.nivel_timer)
+        love.graphics.printf(tiempo_redondeado, 0, 250, ventana.ancho * ventana.escala, 'center')
+    end
+
+    love.graphics.setFont(fuente_small)
 
     if not derrota then
         love.graphics.print("Vidas "..self.jugador.vidas, 60, 10)
