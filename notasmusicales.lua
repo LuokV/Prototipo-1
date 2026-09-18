@@ -74,25 +74,14 @@ end
 
 -- En caso de colision, controla el cambio de los valores de las variables dependiendo de quien recibio el golpe
 function NotasMusicales:Golpe(jugador)
-    
     if self.atrapado then
         if self.debil_a.activado then
             jugador.notas = jugador.notas + 1
             love.audio.play(self.sonido)
-            if jugador.notas == jugador.cancion then
-                victoria = true
-                maquina_EstadoGlobal:cambiar('victoria')
-                love.audio.stop(sonidos.musica)
-                love.audio.play(sonidos.victoria)
-            end
+        
         else jugador.vidas = jugador.vidas - 1
              love.audio.play(sonidos.sfx_hit)
-             if jugador.vidas == 0 then
-                derrota = true
-                maquina_EstadoGlobal:cambiar('derrota')
-                love.audio.stop(sonidos.musica)
-                love.audio.play(sonidos.derrota)
-             end
+            
         end
     end
 end

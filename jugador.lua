@@ -38,7 +38,6 @@ function Jugador:init(x, y, world)
     self.encontacto = 0
 
     self.vidas = 3
-    self.cancion = 10
     self.notas = 0
 
     ----Tipos de ataques musicales de jugador

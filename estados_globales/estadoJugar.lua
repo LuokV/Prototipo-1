@@ -143,6 +143,10 @@ function EstadoJugar:reiniciar()
 
     collectgarbage("collect")
 
+    self.objetivo_notas = 3
+    self.nivel = 1
+    
+
     derrota = false
     victoria = false
 
@@ -175,6 +179,10 @@ function EstadoJugar:init()
     self.contacto = false
 
     self.depurar = false
+
+    self.max_nivel = 3
+    self.nivel = 1 -- lvl inicial
+    self.objetivo_notas = 3 --- notas iniciales a alcanzar
 
     --Inicializacion del mundo fisico
     love.physics.setMeter(32)
@@ -228,19 +236,41 @@ function EstadoJugar:actualizar(dt)
         tiempo_spawn = 0
     end
   
-
     --Movimiento de las notas musicales
     for i = #self.notas_musicales, 1, -1 do
         local notas = self.notas_musicales [i]
         notas:Actualizar(self.jugador.cuerpo:getX(), self.jugador.cuerpo:getY(), self.jugador.ancho, self.jugador.alto, dt)
         --Verificación de colision de las notas musicales con el jugador
         notas.atrapado = notas:Colisiones(self.jugador)
-        --Función que verifica quien recibio el golpe y las condiciones de derrota/victoria
+        --Función que verifica quien recibio el golpe (jugador o nota musical)
         notas:Golpe(self.jugador)
         if notas.atrapado then
             table.remove(self.notas_musicales, i)
         end
     end
+
+    if self.jugador.notas == self.objetivo_notas and self.jugador.notas > 0 then
+        if self.nivel < self.max_nivel then
+            self.nivel = self.nivel + 1
+            self.objetivo_notas = self.objetivo_notas + 2
+            self.jugador.notas = 0
+            self.jugador.vidas = 3
+
+        elseif self.nivel == self.max_nivel then
+            victoria = true
+            maquina_EstadoGlobal:cambiar('victoria')
+            love.audio.stop(sonidos.musica)
+            love.audio.play(sonidos.victoria)
+            
+        end
+           
+    elseif  self. jugador.vidas == 0 then
+        derrota = true
+        maquina_EstadoGlobal:cambiar('derrota')
+        love.audio.stop(sonidos.musica)
+        love.audio.play(sonidos.derrota)
+     end
+
 end
 
 ----------------------DIBUJAR-------------------------
@@ -273,12 +303,14 @@ function EstadoJugar:dibujar()
        self:debugUI()
     end
 
+    love.graphics.print("Nivel "..self.nivel, 250 ,10)
+
     if not derrota then
         love.graphics.print("Vidas "..self.jugador.vidas, 60, 10)
     end
 
     if not victoria then
-        love.graphics.print("Objetivo Notas "..self.jugador.notas.."/"..self.jugador.cancion, 450 ,10)
+        love.graphics.print("Objetivo Notas "..self.jugador.notas.."/"..self.objetivo_notas, 450 ,10)
     end
 
     love.graphics.setColor(1, 0, 0)
