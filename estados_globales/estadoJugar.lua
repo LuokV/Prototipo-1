@@ -174,7 +174,7 @@ function EstadoJugar:init()
     self.entidad2 = nil
     self.contacto = false
 
-    self.depurar = true
+    self.depurar = false
 
     --Inicializacion del mundo fisico
     love.physics.setMeter(32)
@@ -214,9 +214,6 @@ function EstadoJugar:salir() end
 function EstadoJugar:actualizar(dt)
 
     if derrota or victoria then
-        if self.jugador and self.jugador.caminar:isPlaying() then
-            love.audio.stop(self.jugador.caminar)
-        end
         return
     end
 
