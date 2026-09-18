@@ -1,7 +1,11 @@
 EstadoTitulo = Class {__includes = Estado}
 
 function EstadoTitulo:init() end   
-function EstadoTitulo:ingresar() end
+
+function EstadoTitulo:ingresar()
+    love.audio.stop(sonidos.musica)
+end
+
 function EstadoTitulo:salir() end
 function EstadoTitulo:actualizar(dt) end
 

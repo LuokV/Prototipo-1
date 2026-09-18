@@ -34,6 +34,8 @@ function love.keypressed(key, scancode, isrepeat)
         return  
     end
 
+    ----- Aca se puede aplicar tambien maquina_EstadoGlobal.nombre_actual ~= 'titulo'
+    ----- pero lo deje para verificar si al presionar Esc se cortaba el audio como lo deseado
     if key == "escape" then
         maquina_EstadoGlobal:cambiar('titulo')
         return
@@ -66,6 +68,7 @@ function love.load()
         ['jugar'] = function () return EstadoJugar()end,
         ['titulo'] = function () return EstadoTitulo()end,
         ['derrota'] = function () return EstadoDerrota()end,
+        ['victoria'] = function () return EstadoVictoria()end
     }
 
     maquina_EstadoGlobal:cambiar('titulo')

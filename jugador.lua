@@ -15,7 +15,6 @@ function Jugador:keypressed(key)
         self.ataque4.activado =true
         love.audio.play(sonidos.sfx_whoosh)
     end
-    
 end
 
 --INICIALIZACIÓN
@@ -100,16 +99,16 @@ dx=0 -- Evita que el jugador se deslice por el piso
             love.audio.stop(self.caminar)
             else love.audio.play(self.caminar)
         end
-        
+
+        self.correr_der.activado = false
         self.correr_izq.activado = true
         self.salto.activado = false
-
 
         --IDLE -- esto podría ser una función que devuelva booleanos para verificar si se esta moviendo
     else self.correr_der.activado = false
          self.correr_izq.activado = false
          self.salto.activado = false
-         if self.caminar:isPlaying()then
+         if self.caminar:isPlaying() then
             love.audio.stop(self.caminar)
          end
     end

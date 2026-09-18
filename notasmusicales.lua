@@ -1,14 +1,24 @@
 -- Objetivo y "enemigo" del juego 
 NotasMusicales = Class {}
 
+------ LISTADO de Notas Musicales
+
+function Listado_Notas(jugador)
+    local notas_posibles = {
+        {ruta = "img/Rojo.png", escala = 1, ruta_sonido = "sounds/cortar.wav", ataque_jugador = jugador.ataque},
+        {ruta = "img/Verde.png", escala =  1, ruta_sonido = "sounds/colision.wav", ataque_jugador = jugador.ataque2},
+        {ruta =  "img/Azul.png", escala = 1, ruta_sonido = "sounds/espada.wav", ataque_jugador = jugador.ataque3},
+        {ruta = "img/Amarillo.png", escala = 1, ruta_sonido = "sounds/pium.mp3", ataque_jugador = jugador.ataque4}
+    }
+    return notas_posibles
+end
+
 --Inicializacion
 
-function NotasMusicales:init(x, y, ruta, velocidad, escala, ruta_sonido, ataque_jugador)
+function NotasMusicales:init(ruta, velocidad, escala, ruta_sonido, ataque_jugador)
 
-    self.x = x
-    self.y = y
-    self.inicial_x = 130
-    self.inicial_y = 130
+    self.x = 0
+    self.y = 0
     self.escala = escala
     self.sprite = love.graphics.newImage(ruta)
     self.ancho = self.sprite:getWidth()
@@ -49,16 +59,16 @@ function NotasMusicales:PosicionarNota()
     local borde = math.random(1,4)
     if borde == 1 then
         self.x = math.random(0, ventana.ancho)
-        self.y = 0
+        self.y = -5
     elseif borde == 2 then
         self.x = math.random(0, ventana.ancho)
-        self.y = ventana.alto
+        self.y = ventana.alto +5
     elseif borde == 3 then
-        self.x = math.random(0, ventana.alto)
-        self.y = 0
+        self.x = -5
+        self.y = math.random(0, ventana.alto)
     elseif borde == 4 then
-        self.x = math.random(0, ventana.alto)
-        self.y = ventana.ancho
+        self.x = ventana.ancho +5
+        self.y = math.random(0, ventana.alto)
     end
 end
 
@@ -66,12 +76,12 @@ end
 function NotasMusicales:Golpe(jugador)
     
     if self.atrapado then
-        self:PosicionarNota()
         if self.debil_a.activado then
             jugador.notas = jugador.notas + 1
             love.audio.play(self.sonido)
             if jugador.notas == jugador.cancion then
                 victoria = true
+                maquina_EstadoGlobal:cambiar('victoria')
                 love.audio.stop(sonidos.musica)
                 love.audio.play(sonidos.victoria)
             end
@@ -86,7 +96,6 @@ function NotasMusicales:Golpe(jugador)
         end
     end
 end
-
 
 ------ ACTUALIZACION --------
 
