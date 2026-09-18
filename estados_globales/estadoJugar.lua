@@ -249,6 +249,7 @@ function EstadoJugar:actualizar(dt)
         end
     end
 
+    ----VICTORIA
     if self.jugador.notas == self.objetivo_notas and self.jugador.notas > 0 then
         if self.nivel < self.max_nivel then
             self.nivel = self.nivel + 1
@@ -263,10 +264,10 @@ function EstadoJugar:actualizar(dt)
             love.audio.play(sonidos.victoria)
             
         end
-           
+    ----DERROTA
     elseif  self. jugador.vidas == 0 then
         derrota = true
-        maquina_EstadoGlobal:cambiar('derrota')
+        maquina_EstadoGlobal:cambiar('derrota', self.nivel)
         love.audio.stop(sonidos.musica)
         love.audio.play(sonidos.derrota)
      end
