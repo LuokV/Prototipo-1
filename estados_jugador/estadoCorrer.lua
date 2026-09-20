@@ -14,7 +14,7 @@ function EstadoCorrer:salir()
     if self.jugador.caminar:isPlaying() then
         love.audio.stop(self.jugador.caminar)
     end
-    
+
     self.jugador.correr_der.activado = false
     self.jugador.correr_izq.activado = false
 end
@@ -36,7 +36,7 @@ function EstadoCorrer:actualizar(dt)
         return
     end
 
-    if love.keyboard.isDown("up") and self.jugador.puede_saltar then
+    if (love.keyboard.isDown("up") and self.jugador.puede_saltar) or not self.jugador.puede_saltar then
         self.jugador.maquinaEstados_jugador:cambiar("saltar")
         return
     end

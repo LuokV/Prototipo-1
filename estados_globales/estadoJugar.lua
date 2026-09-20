@@ -266,32 +266,59 @@ function EstadoJugar:actualizar(dt)
         end
     end
 
-    ----VICTORIA
-    if self.jugador.notas == self.objetivo_notas and self.jugador.notas > 0 then
-        if self.nivel < self.max_nivel then
-            self.nivel = self.nivel + 1
-            self.objetivo_notas = self.objetivo_notas + 2
-            self.nivel_timer = 3
-            self.velmin_notas = self.velmin_notas + 20
-            self.velmax_notas = self.velmax_notas + 20
-            self.max_notas = self.max_notas + 3
-            self.notas_musicales = {}
-            self.jugador = Jugador(ventana.ancho/2, 90, self.world)
 
-        elseif self.nivel == self.max_nivel then
-            victoria = true
-            maquina_EstadoGlobal:cambiar('victoria')
-            love.audio.stop(sonidos.musica)
-            love.audio.play(sonidos.victoria)
-            
-        end
+    if self.jugador.notas == self.objetivo_notas and self.jugador.notas > 0 then
+
+    ---- AVANZA NIVEL
+        if self.nivel < self.max_nivel then
+
+            -- Se fuerza a parar el sonido de caminar
+            if self.jugador.caminar:isPlaying() then
+                love.audio.stop(self.jugador.caminar)
+            end
+
+            -- Guardo los valores para no perderlos luego del reinicio
+            self.prox_nivel = self.nivel + 1
+            self.prox_objetivo_notas = self.objetivo_notas + 2
+            self.prox_velmin_notas = self.velmin_notas + 10
+            self.prox_velmax_notas = self.velmax_notas + 10
+            self.prox_max_notas = self.max_notas + 3
+
+            self:reiniciar()
+
+            -- Se actualizan las variables con los datos previamente guardados
+            self.nivel = self.prox_nivel
+            self.objetivo_notas = self.prox_objetivo_notas
+            self.nivel_timer = 3
+            self.velmin_notas = self.prox_velmin_notas
+            self.velmax_notas =  self.prox_velmax_notas
+            self.max_notas = self.prox_max_notas
+
+    ----VICTORIA
+    elseif self.nivel == self.max_nivel then
+        victoria = true
+        maquina_EstadoGlobal:cambiar('victoria')
+        love.audio.stop(sonidos.musica)
+        love.audio.play(sonidos.victoria)
+
+        -- Se fuerza a parar el sonido de caminar
+        if self.jugador.caminar:isPlaying() then
+            love.audio.stop(self.jugador.caminar)
+        end   
+    end
+
     ----DERROTA
     elseif  self. jugador.vidas == 0 then
         derrota = true
         maquina_EstadoGlobal:cambiar('derrota', self.nivel)
         love.audio.stop(sonidos.musica)
         love.audio.play(sonidos.derrota)
-     end
+
+        -- Se fuerza a parar el sonido de caminar
+        if self.jugador.caminar:isPlaying() then
+            love.audio.stop(self.jugador.caminar)
+        end
+    end
 
 end
 

@@ -7,14 +7,18 @@ end
 function EstadoSaltar:ingresar()
     local dx, dy = self.jugador.cuerpo:getLinearVelocity()
 
+    if self.jugador.puede_saltar then
     dy = -self.jugador.velocidad_y
     love.audio.play(self.jugador.salto_sonido)
-    
     self.jugador.puede_saltar = false
-
     self.jugador.salto.activado = true
 
+    elseif not self.jugador.puede_saltar then
+       self.jugador.salto.activado = true
+    end
+
     self.jugador.cuerpo:setLinearVelocity(dx, dy)
+
 end
 
 function EstadoSaltar:salir()
