@@ -20,13 +20,6 @@ end
 --INICIALIZACIÓN
 function Jugador:init(x, y, world)
 
-    self.maquinaEstados = MaquinaEstadoJugador{
-        ["idle"] = function () return EstadoIdle(self) end,
-        ["correr"] = function () return EstadoCorrer(self) end,
-        ["saltar"] = function () return EstadoSaltar(self) end,
-        ["atacar"] = function () return EstadoAtacar(self) end,
-    }
-
     self.x = x
     self.y = y
     self.velocidad_x = 60
@@ -77,68 +70,21 @@ function Jugador:init(x, y, world)
 
     --Flag para determinar si el jugador puede saltar
     self.puede_saltar = false
+
+    self.maquinaEstados_jugador = MaquinaEstadoJugador{
+        ["idle"] =   EstadoIdle(self),
+        ["correr"] = EstadoCorrer(self),
+        ["saltar"] = EstadoSaltar(self) 
+    }
+
+    self.maquinaEstados_jugador:cambiar("idle")
 end
 
 
 --ACTUALIZAR
 function Jugador:Actualizar(dt)
 
-local dx, dy = self.cuerpo:getLinearVelocity()
-dx=0 -- Evita que el jugador se deslice por el piso
-
-    if love.keyboard.isDown("right") then
-        dx = self.velocidad_x
-        
-        if not self.puede_saltar then
-            love.audio.stop(self.caminar)
-            else love.audio.play(self.caminar)
-        end
-
-        self.correr_der.activado = true
-        self.correr_izq.activado = false
-        self.salto.activado = false
-    
-    elseif love.keyboard.isDown("left") then
-        dx = - self.velocidad_x
-        
-        if not self.puede_saltar then
-            love.audio.stop(self.caminar)
-            else love.audio.play(self.caminar)
-        end
-
-        self.correr_der.activado = false
-        self.correr_izq.activado = true
-        self.salto.activado = false
-
-        --IDLE -- esto podría ser una función que devuelva booleanos para verificar si se esta moviendo
-    else self.correr_der.activado = false
-         self.correr_izq.activado = false
-         self.salto.activado = false
-         if self.caminar:isPlaying() then
-            love.audio.stop(self.caminar)
-         end
-    end
-
-    if  love.keyboard.isDown("up") and self.puede_saltar  then
-        dy = - self.velocidad_y
-        love.audio.play(self.salto_sonido)
-        self.puede_saltar = false
-    end
- 
-    if not self.puede_saltar then
-        self.salto.activado = true
-    end
-
--- Envita que salte fuera de la ventana
-    if self.cuerpo:getY() < 5 then
-        dy = 0
-    end
-
-self.cuerpo:setLinearVelocity(dx,dy)
-
-ActualizarAnimacion(self.correr_der,dt, false)
-ActualizarAnimacion(self.correr_izq,dt, false)
-ActualizarAnimacion(self.salto,dt, false)
+self.maquinaEstados_jugador:actualizar(dt)
 
 -- Hitbox para colision con Notas Musicales (posiblemente se cambie mas adelante)
 self.hitbox_x = self.cuerpo:getX() - self.origen_x
@@ -154,14 +100,8 @@ end
 
 --DIBUJAR
 function Jugador:Dibujar()
-    
-DibujarAnimacion(self.correr_der, redondear(self.cuerpo:getX()), redondear(self. cuerpo:getY()), self.origen_x, self.origen_y)
-DibujarAnimacion(self.correr_izq, redondear(self.cuerpo:getX()), redondear(self. cuerpo:getY()), self.origen_x, self.origen_y)
-DibujarAnimacion(self.salto, redondear(self.cuerpo:getX()), redondear(self. cuerpo:getY()), self.origen_x, self.origen_y)
 
-if not self.correr_der.activado and not self.correr_izq.activado and not self.salto.activado then
-    love.graphics.draw(self.sprite, redondear(self.cuerpo:getX()), redondear(self.cuerpo:getY()), 0,1,1, self.origen_x, self.origen_y)
-end
+self.maquinaEstados_jugador:dibujar()
 
 ------ Dibujar Ataque 
 love.graphics.setColor(1, 0, 0)

@@ -16,7 +16,6 @@ require "estados_globales.estadoVictoria"
 
 --Importar Estados Jugador
 require "estados_jugador.estadoJugador"
-require "estados_jugador.estadoAtacar"
 require "estados_jugador.estadoCorrer"
 require "estados_jugador.estadoIdle"
 require "estados_jugador.estadoSaltar"
