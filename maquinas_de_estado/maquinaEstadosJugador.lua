@@ -15,7 +15,7 @@ end
 function MaquinaEstadoJugador:cambiar(nombreEstado, parametrosIniciales)
     assert(self.estados_globales[nombreEstado])
     self.actual:salir()
-    self.actual = self.estados_globales [nombreEstado] ()
+    self.actual = self.estados_globales [nombreEstado]
     self.actual:ingresar (parametrosIniciales)
     self.nombre_actual = nombreEstado
 end
