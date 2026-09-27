@@ -67,7 +67,6 @@ function HUD:DrawHitboxes(jugador, notas_musicales)
 end
 
 function HUD:DebugToogle()
-    --depurar = not depurar
     self.depurar = not self.depurar
 end
 

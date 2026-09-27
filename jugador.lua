@@ -39,6 +39,7 @@ function Jugador:init(x, y, world)
 
     self.vidas = 3
     self.notas = 0
+    self.color = {1,1,1,1}
 
     ----Tipos de ataques musicales de jugador
   
@@ -71,7 +72,10 @@ function Jugador:init(x, y, world)
     --Flag para determinar si el jugador puede saltar
     self.puede_saltar = false
 
+    --Eventos
     love.event.push('actualizarVidas', self.vidas)
+    self.signal_herido = Signal.register ("jugador_herido", function() self:Herido() end)
+    self.signal_nota_obtenida = Signal.register ("jugador_nota", function() self:ObtenerNota() end)
 
     self.maquinaEstados_jugador = MaquinaEstadoJugador{
         ["idle"] =   EstadoIdle(self),
@@ -102,7 +106,7 @@ end
 
 --DIBUJAR
 function Jugador:Dibujar()
-
+love.graphics.setColor(self.color) 
 self.maquinaEstados_jugador:dibujar()
 
 ------ Dibujar Ataque 
@@ -122,4 +126,19 @@ end
 function Jugador:Debug()
     love.graphics.rectangle("line", redondear(self.hitbox_x), redondear(self.hitbox_y), self.ancho, self.alto)
     love.graphics.circle("fill", redondear(self.cuerpo:getX()), redondear(self.cuerpo:getY()), 1)
+end
+
+function Jugador:ObtenerNota()
+    self.notas = self.notas + 1
+end
+
+function Jugador:Herido()
+    self.color = {1,0,0,0.5}
+    love.audio.play(sonidos.sfx_hit)
+    self.vidas = self.vidas - 1
+    love.event.push('actualizarVidas', self.vidas)
+
+    Timer.after(0.3, function () 
+                    self.color = {1, 1, 1, 1}
+                end)
 end

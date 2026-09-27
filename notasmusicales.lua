@@ -76,13 +76,10 @@ end
 function NotasMusicales:Golpe(jugador, objetivo_notas)
     if self.atrapado then
         if self.debil_a.activado then
-            jugador.notas = jugador.notas + 1
+            Signal.emit("jugador_nota")
             love.event.push('actualizarObjetivos', jugador.notas, objetivo_notas)
-            love.audio.play(self.sonido)
-        
-        else jugador.vidas = jugador.vidas - 1
-             love.event.push('actualizarVidas', jugador.vidas)
-             love.audio.play(sonidos.sfx_hit)
+            love.audio.play(self.sonido) --- Este sonido es propio de la nota
+        else Signal.emit("jugador_herido")
         end
     end
 end
@@ -90,7 +87,7 @@ end
 ------ ACTUALIZACION --------
 
 function NotasMusicales:Actualizar(x, y, a, al, dt)
-       --Persecución
+    --Persecución
     local dist_x = math.abs(self.x - x)
     local dist_y = math.abs(self.y - y)
 

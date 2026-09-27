@@ -224,6 +224,8 @@ function EstadoJugar:actualizar(dt)
         return
     end
 
+    Timer.update(dt)
+
     self.world:update(dt)
 
     self.jugador:Actualizar(dt)
