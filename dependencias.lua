@@ -1,5 +1,7 @@
 -- Librerias
 Class = require 'lib.class'
+Timer = require 'lib.timer'
+Signal = require 'lib.signal'
 
 -- Importar Clases
 require ("escenario")

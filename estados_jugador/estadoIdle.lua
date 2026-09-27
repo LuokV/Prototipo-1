@@ -23,7 +23,7 @@ function EstadoIdle:actualizar(dt)
         return
     end
 
-    if love.keyboard.isDown("up") and self.jugador.puede_saltar then
+    if (love.keyboard.isDown("up") and self.jugador.puede_saltar) or not self.jugador.puede_saltar then
         self.jugador.maquinaEstados_jugador:cambiar("saltar")
         return
     end
