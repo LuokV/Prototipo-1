@@ -9,6 +9,9 @@ require ("jugador")
 require ("notasmusicales")
 require ("animaciones")
 
+-- UI
+require "hud"
+
 -- Importar Estados Globales
 require "estados_globales.estado"
 require "estados_globales.estadoJugar"

@@ -71,13 +71,15 @@ function Jugador:init(x, y, world)
     --Flag para determinar si el jugador puede saltar
     self.puede_saltar = false
 
+    love.event.push('actualizarVidas', self.vidas)
+
     self.maquinaEstados_jugador = MaquinaEstadoJugador{
         ["idle"] =   EstadoIdle(self),
         ["correr"] = EstadoCorrer(self),
         ["saltar"] = EstadoSaltar(self) 
     }
 
-    self.maquinaEstados_jugador:cambiar("idle")
+    self.maquinaEstados_jugador:cambiar("idle") 
 end
 
 
