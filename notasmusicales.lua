@@ -33,7 +33,7 @@ function NotasMusicales:init(ruta, velocidad, escala, ruta_sonido, ataque_jugado
     self.atrapado = false
     self.sonido =  love.audio.newSource(ruta_sonido, "static")
     self.debil_a = ataque_jugador
-   
+
 end
 
 -- FUNCIONES DE COMPORTAMIENTO
@@ -59,15 +59,15 @@ function NotasMusicales:PosicionarNota()
     local borde = math.random(1,4)
     if borde == 1 then
         self.x = math.random(0, ventana.ancho)
-        self.y = -5
+        self.y = -15
     elseif borde == 2 then
         self.x = math.random(0, ventana.ancho)
-        self.y = ventana.alto +5
+        self.y = ventana.alto +15
     elseif borde == 3 then
-        self.x = -5
+        self.x = -15
         self.y = math.random(0, ventana.alto)
     elseif borde == 4 then
-        self.x = ventana.ancho +5
+        self.x = ventana.ancho +15
         self.y = math.random(0, ventana.alto)
     end
 end

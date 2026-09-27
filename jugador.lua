@@ -89,7 +89,7 @@ end
 
 --ACTUALIZAR
 function Jugador:Actualizar(dt)
-
+    
 self.maquinaEstados_jugador:actualizar(dt)
 
 -- Hitbox para colision con Notas Musicales 
@@ -129,7 +129,11 @@ function Jugador:Debug()
 end
 
 function Jugador:ObtenerNota()
+    self.color = {1,0,1,1}
     self.notas = self.notas + 1
+    Timer.after(0.3, function () 
+                    self.color = {1, 1, 1, 1}
+                end)
 end
 
 function Jugador:Herido()

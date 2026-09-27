@@ -251,6 +251,7 @@ function EstadoJugar:actualizar(dt)
         end
     end
 
+    --- Es para ver el "ATRAPADO" en el Debug
     if hud.timer_atrapado > 0 then
         hud.timer_atrapado = hud.timer_atrapado - dt
     end
