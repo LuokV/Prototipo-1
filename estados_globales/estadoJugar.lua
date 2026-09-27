@@ -8,6 +8,8 @@ EstadoJugar = Class {__includes = Estado}
     tiempo_spawn = 0
     intervalo_spawn = 1.5
 
+    hud = nil
+
 ------------------------------------- COLISIONES 
 -- Por cuerpo físico
 function EstadoJugar:iniciarContacto(a,b,col)
@@ -70,31 +72,6 @@ function EstadoJugar:terminarContacto(a,b,col)
     self.entidad2 = nil
 end
 
------------------------------------------- DEBUG
-function EstadoJugar:debugUI()
-    love.graphics.setColor(0, 1, 0)
-    love.graphics.print("FPS: "..love.timer.getFPS(), 350, 650)
-
-    for i, notas in ipairs(self.notas_musicales) do
-       if notas.atrapado then
-        love.graphics.print("ATRAPADO", 100, 10)
-       end
-    end
-
-    love.graphics.setColor(1, 1, 1)
-end
-
-function EstadoJugar:debugHitboxes()
-        love.graphics.setColor(0, 1, 0)
-        self.jugador:Debug()
-      
-        for i, notas in ipairs(self.notas_musicales) do
-            notas:Debug()
-        end
-
-        love.graphics.setColor(1, 1, 1)
-end
-
 -------------------------------------------- INPUT TECLADO
 function EstadoJugar:keypressed(key)
 
@@ -103,7 +80,7 @@ function EstadoJugar:keypressed(key)
     end
 
     if key == "f1" then
-        self.depurar = not self.depurar
+        love.event.push('modoDebug')
     end
 
     self.jugador:keypressed(key) -- Pasa la tecla al jugador para que su funcion se encargue si coinciden
@@ -214,6 +191,11 @@ function EstadoJugar:init()
     sonidos.musica:setVolume(0.40) -- 0 a 1
     love.audio.play(sonidos.musica)
 
+    hud = HUD()
+
+    love.event.push('actualizarNivel', self.nivel)
+    love.event.push('actualizarObjetivos', self.jugador.notas, self.objetivo_notas)
+
     self.notas_musicales = {}
 
     math.randomseed(os.time())
@@ -252,7 +234,7 @@ function EstadoJugar:actualizar(dt)
         self:generarNotaMusical()
         tiempo_spawn = 0
     end
-  
+
     --Movimiento de las notas musicales
     for i = #self.notas_musicales, 1, -1 do
         local notas = self.notas_musicales [i]
@@ -260,12 +242,16 @@ function EstadoJugar:actualizar(dt)
         --Verificación de colision de las notas musicales con el jugador
         notas.atrapado = notas:Colisiones(self.jugador)
         --Función que verifica quien recibio el golpe (jugador o nota musical)
-        notas:Golpe(self.jugador)
+        notas:Golpe(self.jugador, self.objetivo_notas)
         if notas.atrapado then
+            hud.timer_atrapado = 0.5 
             table.remove(self.notas_musicales, i)
         end
     end
 
+    if hud.timer_atrapado > 0 then
+        hud.timer_atrapado = hud.timer_atrapado - dt
+    end
 
     if self.jugador.notas == self.objetivo_notas and self.jugador.notas > 0 then
 
@@ -293,6 +279,8 @@ function EstadoJugar:actualizar(dt)
             self.velmin_notas = self.prox_velmin_notas
             self.velmax_notas =  self.prox_velmax_notas
             self.max_notas = self.prox_max_notas
+            love.event.push('actualizarNivel', self.nivel)
+            love.event.push('actualizarObjetivos', self.jugador.notas, self.objetivo_notas)
 
     ----VICTORIA
     elseif self.nivel == self.max_nivel then
@@ -329,8 +317,6 @@ function EstadoJugar:dibujar()
     love.graphics.setCanvas(lienzo)
     love.graphics.clear()
 
-    love.graphics.setFont(fuente_small)
-
     DibujarEscenario()
 
     self.jugador:Dibujar()
@@ -339,45 +325,11 @@ function EstadoJugar:dibujar()
         notas:Dibujar()
     end
 
-    if self.depurar then
-       self:debugHitboxes()
-       love.graphics.print("Notas: " .. #self.notas_musicales, 40, ventana.alto/2)
-    end
+    hud:DrawHitboxes(self.jugador,self.notas_musicales)
 
     love.graphics.setCanvas()
-
     love.graphics.draw(lienzo, 0, 0, 0, ventana.escala, ventana.escala)
 
-   if self.depurar then
-       self:debugUI()
-    end
-
-    love.graphics.print("Nivel "..self.nivel, 250 ,10)
-
-      love.graphics.setFont(fuente)
-
-    if self.nivel_timer > 0 then
-        local tiempo_redondeado = redondear(self.nivel_timer)
-        love.graphics.printf(tiempo_redondeado, 0, 250, ventana.ancho * ventana.escala, 'center')
-    end
-
-    love.graphics.setFont(fuente_small)
-
-    if not derrota then
-        love.graphics.print("Vidas "..self.jugador.vidas, 60, 10)
-    end
-
-    if not victoria then
-        love.graphics.print("Objetivo Notas "..self.jugador.notas.."/"..self.objetivo_notas, 450 ,10)
-    end
-
-    love.graphics.setColor(1, 0, 0)
-    if self.contacto and self.depurar then
-        love.graphics.print("CHOQUE", 650/2,220)
-        love.graphics.print(self.entidad1, 650/2,260)
-        love.graphics.print(self.entidad2, 650/2,300)
-        love.graphics.print(self.jugador.encontacto, 650/2,330)
-    end
-    love.graphics.setColor(1, 1, 1)
-
+    hud:DrawGameData(self.notas_musicales, self.contacto, self.entidad1, self.entidad2, self.jugador)
+    hud:Draw(self.nivel_timer)
 end

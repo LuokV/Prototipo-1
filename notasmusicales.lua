@@ -73,15 +73,17 @@ function NotasMusicales:PosicionarNota()
 end
 
 -- En caso de colision, controla el cambio de los valores de las variables dependiendo de quien recibio el golpe
-function NotasMusicales:Golpe(jugador)
+function NotasMusicales:Golpe(jugador, objetivo_notas)
     if self.atrapado then
         if self.debil_a.activado then
             jugador.notas = jugador.notas + 1
+            love.event.push('actualizarVidas', jugador.vidas)
+            love.event.push('actualizarObjetivos', jugador.notas, objetivo_notas)
             love.audio.play(self.sonido)
         
         else jugador.vidas = jugador.vidas - 1
+             love.event.push('actualizarVidas', jugador.vidas)
              love.audio.play(sonidos.sfx_hit)
-            
         end
     end
 end
