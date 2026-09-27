@@ -88,7 +88,7 @@ function Jugador:Actualizar(dt)
 
 self.maquinaEstados_jugador:actualizar(dt)
 
--- Hitbox para colision con Notas Musicales (posiblemente se cambie mas adelante)
+-- Hitbox para colision con Notas Musicales 
 self.hitbox_x = self.cuerpo:getX() - self.origen_x
 self.hitbox_y = self.cuerpo:getY() - self.origen_y
 

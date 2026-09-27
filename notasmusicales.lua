@@ -77,7 +77,6 @@ function NotasMusicales:Golpe(jugador, objetivo_notas)
     if self.atrapado then
         if self.debil_a.activado then
             jugador.notas = jugador.notas + 1
-            love.event.push('actualizarVidas', jugador.vidas)
             love.event.push('actualizarObjetivos', jugador.notas, objetivo_notas)
             love.audio.play(self.sonido)
         
