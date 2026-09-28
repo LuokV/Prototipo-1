@@ -33,7 +33,7 @@ function NotasMusicales:init(ruta, velocidad, escala, ruta_sonido, ataque_jugado
     self.atrapado = false
     self.sonido =  love.audio.newSource(ruta_sonido, "static")
     self.debil_a = ataque_jugador
-   
+
 end
 
 -- FUNCIONES DE COMPORTAMIENTO
@@ -59,15 +59,15 @@ function NotasMusicales:PosicionarNota()
     local borde = math.random(1,4)
     if borde == 1 then
         self.x = math.random(0, ventana.ancho)
-        self.y = -5
+        self.y = -15
     elseif borde == 2 then
         self.x = math.random(0, ventana.ancho)
-        self.y = ventana.alto +5
+        self.y = ventana.alto +15
     elseif borde == 3 then
-        self.x = -5
+        self.x = -15
         self.y = math.random(0, ventana.alto)
     elseif borde == 4 then
-        self.x = ventana.ancho +5
+        self.x = ventana.ancho +15
         self.y = math.random(0, ventana.alto)
     end
 end
@@ -76,13 +76,10 @@ end
 function NotasMusicales:Golpe(jugador, objetivo_notas)
     if self.atrapado then
         if self.debil_a.activado then
-            jugador.notas = jugador.notas + 1
+            Signal.emit("jugador_nota")
             love.event.push('actualizarObjetivos', jugador.notas, objetivo_notas)
-            love.audio.play(self.sonido)
-        
-        else jugador.vidas = jugador.vidas - 1
-             love.event.push('actualizarVidas', jugador.vidas)
-             love.audio.play(sonidos.sfx_hit)
+            love.audio.play(self.sonido) --- Este sonido es propio de la nota
+        else Signal.emit("jugador_herido")
         end
     end
 end
@@ -90,7 +87,7 @@ end
 ------ ACTUALIZACION --------
 
 function NotasMusicales:Actualizar(x, y, a, al, dt)
-       --Persecución
+    --Persecución
     local dist_x = math.abs(self.x - x)
     local dist_y = math.abs(self.y - y)
 
