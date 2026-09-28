@@ -145,7 +145,7 @@ function Jugador:ObtenerNota()
     self.color = {1,0,1,1}
     self.notas = self.notas + 1
 
-     if self.cuerpo and not self.cuerpo:isDestroyed() then
+    if self.cuerpo and not self.cuerpo:isDestroyed() then
         local dx, dy = self.cuerpo:getPosition() 
         self.particula:setPosition(dx, dy)
         self.particula:emit(10) 
