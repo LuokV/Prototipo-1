@@ -42,7 +42,6 @@ function Jugador:init(x, y, world)
     self.color = {1,1,1,1}
 
     ----Tipos de ataques musicales de jugador
-  
     self.ataque = CrearAnimacion("img/CortarSprites.png",3,32,32,12, false, 32, 0)
     self.ataque.activado = false
 
@@ -59,7 +58,16 @@ function Jugador:init(x, y, world)
     self.correr_der = CrearAnimacion("img/NinjaSprites.png",3,16,16,12, true, 48, 16)
     self.correr_izq = CrearAnimacion("img/NinjaSprites.png",3,16,16,12, true, 32, 16)
     self.salto = CrearAnimacion("img/NinjaSprites.png",0,16,16,2, false, 16, 96)
-    -----------
+ 
+    -- Particula al agarrar nota
+    self.img_particula = love.graphics.newImage('img/Particula.png')
+    self.particula = love.graphics.newParticleSystem(self.img_particula, 32)
+    self.particula:setParticleLifetime(0.3, 0.6) 
+	self.particula:setEmissionRate(0)
+	self.particula:setSizeVariation(0)
+	self.particula:setLinearAcceleration(-120, -120, 120, 120) 
+	self.particula:setColors(1, 1, 0, 1,   1, 0.5, 0, 0)
+    self.particula:setSizes(0.05, 0.1)
 
     self.acople:setUserData("jugador")
 
@@ -92,6 +100,8 @@ function Jugador:Actualizar(dt)
     
 self.maquinaEstados_jugador:actualizar(dt)
 
+self.particula:update(dt)
+
 -- Hitbox para colision con Notas Musicales 
 self.hitbox_x = self.cuerpo:getX() - self.origen_x
 self.hitbox_y = self.cuerpo:getY() - self.origen_y
@@ -106,6 +116,9 @@ end
 
 --DIBUJAR
 function Jugador:Dibujar()
+love.graphics.setColor(1, 1, 1, 1)
+love.graphics.draw(self.particula)
+
 love.graphics.setColor(self.color) 
 self.maquinaEstados_jugador:dibujar()
 
@@ -131,9 +144,17 @@ end
 function Jugador:ObtenerNota()
     self.color = {1,0,1,1}
     self.notas = self.notas + 1
+
+     if self.cuerpo and not self.cuerpo:isDestroyed() then
+        local dx, dy = self.cuerpo:getPosition() 
+        self.particula:setPosition(dx, dy)
+        self.particula:emit(10) 
+    end
+
     Timer.after(0.3, function () 
                     self.color = {1, 1, 1, 1}
                 end)
+
 end
 
 function Jugador:Herido()
