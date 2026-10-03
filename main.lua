@@ -37,7 +37,10 @@ function love.keypressed(key, scancode, isrepeat)
     ----- Aca se puede aplicar tambien maquina_EstadoGlobal.nombre_actual ~= 'titulo'
     ----- pero lo deje para verificar si al presionar Esc se cortaba el audio como lo deseado
     if key == "escape" then
-        maquina_EstadoGlobal:cambiar('titulo')
+        if maquina_EstadoGlobal.nombre_actual == 'titulo' then
+            love.event.push('quit')
+        else maquina_EstadoGlobal:cambiar('titulo')
+        end
         return
     end
 
