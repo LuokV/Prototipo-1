@@ -79,8 +79,9 @@ function NotasMusicales:Golpe(jugador, objetivo_notas)
             Signal.emit("jugador_nota")
             love.event.push('actualizarObjetivos', jugador.notas, objetivo_notas)
             love.audio.play(self.sonido) --- Este sonido es propio de la nota
-        else Signal.emit("jugador_herido")
+        else Signal.emit("jugador_herido") 
         end
+    love.event.push('actualizarVidas', jugador.vidas)
     end
 end
 

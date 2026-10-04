@@ -5,14 +5,16 @@ function EstadoCorrer:init(jugador)
 end   
 
 function EstadoCorrer:ingresar()
-    if self.jugador.puede_saltar and not self.jugador.caminar:isPlaying() then
-        love.audio.play(self.jugador.caminar)
+    if self.jugador.puede_saltar and not self.jugador.caminar_sonido:isPlaying() then
+        love.audio.play(self.jugador.caminar_sonido)
+        self.jugador.caminar_sonido:setVolume(0.2)
+        self.jugador.caminar_sonido:setLooping(true)
     end
 end
 
 function EstadoCorrer:salir()
-    if self.jugador.caminar:isPlaying() then
-        love.audio.stop(self.jugador.caminar)
+    if self.jugador.caminar_sonido:isPlaying() then
+        love.audio.stop(self.jugador.caminar_sonido)
     end
 
     self.jugador.correr_der.activado = false

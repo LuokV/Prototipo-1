@@ -74,8 +74,8 @@ function Jugador:init(x, y, world)
     self.cuerpo:setFixedRotation(true)
 
     --Sonidos
-    self.salto_sonido = love.audio.newSource("sounds/jump.wav", "static")
-    self.caminar = love.audio.newSource("sounds/pasos.wav", "static")
+    self.salto_sonido = love.audio.newSource("sounds/jump3.ogg", "static")
+    self.caminar_sonido = love.audio.newSource("sounds/steps.mp3", "static")
 
     --Flag para determinar si el jugador puede saltar
     self.puede_saltar = false
@@ -161,7 +161,6 @@ function Jugador:Herido()
     self.color = {1,0,0,0.5}
     love.audio.play(sonidos.sfx_hit)
     self.vidas = self.vidas - 1
-    love.event.push('actualizarVidas', self.vidas)
 
     Timer.after(0.3, function () 
                     self.color = {1, 1, 1, 1}

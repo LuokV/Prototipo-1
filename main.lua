@@ -9,7 +9,7 @@ escala = 3.5
 
 --SONIDOS
 sonidos = {
-    musica = love.audio.newSource("sounds/musica.ogg", "stream"),
+    musica = love.audio.newSource("sounds/tunetank-medieval.mp3", "stream"),
     victoria = love.audio.newSource("sounds/victoria.wav", "stream"),
     derrota = love.audio.newSource("sounds/derrota.wav", "stream"),
     sfx_hit = love.audio.newSource("sounds/hit.wav", "static"),

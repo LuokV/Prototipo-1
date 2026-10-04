@@ -188,7 +188,7 @@ function EstadoJugar:init()
 
     --MUSICA
     sonidos.musica:setLooping(true)
-    sonidos.musica:setVolume(0.40) -- 0 a 1
+    sonidos.musica:setVolume(0.1) -- 0 a 1
     love.audio.play(sonidos.musica)
 
     hud = HUD()
@@ -262,8 +262,8 @@ function EstadoJugar:actualizar(dt)
         if self.nivel < self.max_nivel then
 
             -- Se fuerza a parar el sonido de caminar
-            if self.jugador.caminar:isPlaying() then
-                love.audio.stop(self.jugador.caminar)
+            if self.jugador.caminar_sonido:isPlaying() then
+                love.audio.stop(self.jugador.caminar_sonido)
             end
 
             -- Guardo los valores para no perderlos luego del reinicio
@@ -293,8 +293,8 @@ function EstadoJugar:actualizar(dt)
         love.audio.play(sonidos.victoria)
 
         -- Se fuerza a parar el sonido de caminar
-        if self.jugador.caminar:isPlaying() then
-            love.audio.stop(self.jugador.caminar)
+        if self.jugador.caminar_sonido:isPlaying() then
+            love.audio.stop(self.jugador.caminar_sonido)
         end   
     end
 
@@ -306,8 +306,8 @@ function EstadoJugar:actualizar(dt)
         love.audio.play(sonidos.derrota)
 
         -- Se fuerza a parar el sonido de caminar
-        if self.jugador.caminar:isPlaying() then
-            love.audio.stop(self.jugador.caminar)
+        if self.jugador.caminar_sonido:isPlaying() then
+            love.audio.stop(self.jugador.caminar_sonido)
         end
     end
 
