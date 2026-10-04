@@ -42,16 +42,16 @@ function Jugador:init(x, y, world)
     self.color = {1,1,1,1}
 
     ----Tipos de ataques musicales de jugador
-    self.ataque = CrearAnimacion("img/CortarSprites.png",3,32,32,12, false, 32, 0)
+    self.ataque = CrearAnimacion("img/GolpeSprites.png",4,25,24,12, false, 25, 0)
     self.ataque.activado = false
 
-    self.ataque2 = CrearAnimacion("img/AuraSprites.png",4,25,24,12, false, 25, 0)
+    self.ataque2 = CrearAnimacion("img/GolpeSprites.png",4,25,24,12, false, 25, 0)
     self.ataque2.activado = false
 
-    self.ataque3 = CrearAnimacion("img/AuraSprites.png",4,25,24,12, false, 25, 0)
+    self.ataque3 = CrearAnimacion("img/GolpeSprites.png",4,25,24,12, false, 25, 0)
     self.ataque3.activado = false
 
-    self.ataque4 = CrearAnimacion("img/AuraSprites.png",4,25,24,12, false, 25, 0)
+    self.ataque4 = CrearAnimacion("img/GolpeSprites.png",4,25,24,12, false, 25, 0)
     self.ataque4.activado = false
 
     --Animaciones
@@ -124,7 +124,7 @@ self.maquinaEstados_jugador:dibujar()
 
 ------ Dibujar Ataque 
 love.graphics.setColor(1, 0, 0)
-DibujarAnimacion(self.ataque, redondear(self.cuerpo:getX()), redondear(self.cuerpo:getY()), self.origen_x + 8, self.origen_y + 8)
+DibujarAnimacion(self.ataque, redondear(self.cuerpo:getX()), redondear(self.cuerpo:getY()), self.origen_x + 5, self.origen_y + 5)
 love.graphics.setColor(0, 1, 0)
 DibujarAnimacion(self.ataque2, redondear(self.cuerpo:getX()), redondear(self.cuerpo:getY()), self.origen_x + 5, self.origen_y + 5)
 love.graphics.setColor(0, 0, 1)
