@@ -60,14 +60,14 @@ function Jugador:init(x, y, world)
     self.salto = CrearAnimacion("img/GoatSprites.png",0,16,16,2, false, 0, 16)
  
     -- Particula al agarrar nota
-    self.img_particula = love.graphics.newImage('img/Particula.png')
+    self.img_particula = love.graphics.newImage('img/Estrella.png')
     self.particula = love.graphics.newParticleSystem(self.img_particula, 32)
     self.particula:setParticleLifetime(0.3, 0.6) 
 	self.particula:setEmissionRate(0)
-	self.particula:setSizeVariation(0)
+	self.particula:setSizeVariation(1)
 	self.particula:setLinearAcceleration(-120, -120, 120, 120) 
-	self.particula:setColors(1, 1, 0, 1,   1, 0.5, 0, 0)
-    self.particula:setSizes(0.05, 0.1)
+	self.particula:setColors(1, 1, 1, 1, 1, 1, 1, 0)
+    self.particula:setSizes(0.8, 1)
 
     self.acople:setUserData("jugador")
 
@@ -148,7 +148,7 @@ function Jugador:ObtenerNota()
     if self.cuerpo and not self.cuerpo:isDestroyed() then
         local dx, dy = self.cuerpo:getPosition() 
         self.particula:setPosition(dx, dy)
-        self.particula:emit(10) 
+        self.particula:emit(5) 
     end
 
     Timer.after(0.3, function () 
