@@ -24,7 +24,7 @@ function Jugador:init(x, y, world)
     self.y = y
     self.velocidad_x = 60
     self.velocidad_y = 120
-    self.sprite = love.graphics.newImage("img/Ninja.png")
+    self.sprite = love.graphics.newImage("img/Goat.png")
     self.ancho = self.sprite:getWidth()
     self.alto = self.sprite:getHeight()
     self.hitbox_x = 0
@@ -55,9 +55,9 @@ function Jugador:init(x, y, world)
     self.ataque4.activado = false
 
     --Animaciones
-    self.correr_der = CrearAnimacion("img/NinjaSprites.png",3,16,16,12, true, 48, 16)
-    self.correr_izq = CrearAnimacion("img/NinjaSprites.png",3,16,16,12, true, 32, 16)
-    self.salto = CrearAnimacion("img/NinjaSprites.png",0,16,16,2, false, 16, 96)
+    self.correr_der = CrearAnimacion("img/GoatSprites.png",3,16,16,12, true, 32, 16)
+    self.correr_izq = CrearAnimacion("img/GoatSprites.png",3,16,16,12, true, 16, 16)
+    self.salto = CrearAnimacion("img/GoatSprites.png",0,16,16,2, false, 0, 16)
  
     -- Particula al agarrar nota
     self.img_particula = love.graphics.newImage('img/Particula.png')
