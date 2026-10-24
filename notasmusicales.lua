@@ -75,6 +75,12 @@ end
 -- En caso de colision, controla el cambio de los valores de las variables dependiendo de quien recibio el golpe
 function NotasMusicales:Golpe(jugador, objetivo_notas)
     if self.atrapado then
+        
+        if jugador.invulnerable then
+            self.atrapado = false 
+            return
+        end
+
         if self.debil_a.activado then
             Signal.emit("jugador_nota")
             love.event.push('actualizarObjetivos', jugador.notas, objetivo_notas)

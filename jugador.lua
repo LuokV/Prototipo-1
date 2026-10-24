@@ -2,6 +2,10 @@ Jugador = Class {}
 
 function Jugador:keypressed(key)
 
+    if self.invulnerable then --- no permitir que el jugador ataque si fue herido
+        return
+    end
+
     if key == "q" and not self.ataque.activado then
         self.ataque.activado =true
         love.audio.play(sonidos.sfx_whoosh)
@@ -15,6 +19,29 @@ function Jugador:keypressed(key)
         self.ataque4.activado =true
         love.audio.play(sonidos.sfx_whoosh)
     end
+end
+
+function Jugador:corrutina_invulnerabilidad()
+   
+    self.invulnerable = true
+    self.color = {1,0,0,0.5}
+
+    self.rutina_invulnerable = coroutine.create(function()
+
+        for i = 1, 15 do
+            self.visible = not self.visible
+
+            local tiempo_transcurrido = 0
+            while tiempo_transcurrido < 0.1 do
+                local dt = coroutine.yield()
+                tiempo_transcurrido = tiempo_transcurrido + dt
+            end
+        end
+
+        self.visible = true
+        self.invulnerable = false
+        self.color = {1, 1, 1, 1}
+    end)
 end
 
 --INICIALIZACIÓN
@@ -40,6 +67,10 @@ function Jugador:init(x, y, world)
     self.vidas = 3
     self.notas = 0
     self.color = {1,1,1,1}
+
+    self.invulnerable = false
+    self.visible = true
+    self.rutina_invulnerable = nil
 
     ----Tipos de ataques musicales de jugador
     self.ataque = CrearAnimacion("img/GolpeSprites.png",4,25,24,12, false, 25, 0)
@@ -97,6 +128,11 @@ end
 
 --ACTUALIZAR
 function Jugador:Actualizar(dt)
+
+if self.rutina_invulnerable and coroutine.status(self.rutina_invulnerable) ~= "dead" then
+    local exito = coroutine.resume(self.rutina_invulnerable, dt)
+    if not exito then return end
+end
     
 self.maquinaEstados_jugador:actualizar(dt)
 
@@ -119,8 +155,10 @@ function Jugador:Dibujar()
 love.graphics.setColor(1, 1, 1, 1)
 love.graphics.draw(self.particula)
 
-love.graphics.setColor(self.color) 
-self.maquinaEstados_jugador:dibujar()
+if self.visible then
+    love.graphics.setColor(self.color) 
+    self.maquinaEstados_jugador:dibujar()
+end
 
 ------ Dibujar Ataque 
 love.graphics.setColor(1, 0, 0)
@@ -158,11 +196,9 @@ function Jugador:ObtenerNota()
 end
 
 function Jugador:Herido()
-    self.color = {1,0,0,0.5}
+    self:corrutina_invulnerabilidad();
+
     love.audio.play(sonidos.sfx_hit)
     self.vidas = self.vidas - 1
 
-    Timer.after(0.3, function () 
-                    self.color = {1, 1, 1, 1}
-                end)
 end
