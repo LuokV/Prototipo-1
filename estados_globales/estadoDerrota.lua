@@ -5,6 +5,7 @@ function EstadoDerrota:init()
 end   
 function EstadoDerrota:ingresar(nivel)
     self.nivel = nivel
+    love.audio.play(sonidos.derrota)
 end
 function EstadoDerrota:salir() end
 function EstadoDerrota:actualizar(dt) end

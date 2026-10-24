@@ -158,7 +158,7 @@ function EstadoJugar:reiniciar()
 
     self.world = love.physics.newWorld(0,9.81*16,true)
 
-    self.jugador = Jugador(ventana.ancho/2, 90, self.world)
+    self.jugador = Jugador(ventana.ancho/2, 91, self.world)
 
     self.escenario = CrearEscenario(self.world)
 
@@ -200,7 +200,7 @@ function EstadoJugar:init()
     self.world = love.physics.newWorld(0,9.81*16,true)
 
     --Inicializacion del Jugador
-    self.jugador = Jugador(ventana.ancho/2, 90, self.world)
+    self.jugador = Jugador(ventana.ancho/2, 91, self.world)
     CrearEscenario(self.world)
 
     self.world:setCallbacks(
@@ -309,7 +309,6 @@ function EstadoJugar:actualizar(dt)
         victoria = true
         maquina_EstadoGlobal:cambiar('victoria')
         love.audio.stop(sonidos.musica)
-        love.audio.play(sonidos.victoria)
 
         -- Se fuerza a parar el sonido de caminar
         if self.jugador.caminar_sonido:isPlaying() then
@@ -322,7 +321,6 @@ function EstadoJugar:actualizar(dt)
         derrota = true
         maquina_EstadoGlobal:cambiar('derrota', self.nivel)
         love.audio.stop(sonidos.musica)
-        love.audio.play(sonidos.derrota)
 
         -- Se fuerza a parar el sonido de caminar
         if self.jugador.caminar_sonido:isPlaying() then

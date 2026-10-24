@@ -1,7 +1,9 @@
 EstadoVictoria = Class {__includes = Estado}
 
 function EstadoVictoria:init() end   
-function EstadoVictoria:ingresar() end
+function EstadoVictoria:ingresar()
+    love.audio.play(sonidos.victoria)
+end
 function EstadoVictoria:salir() end
 function EstadoVictoria:actualizar(dt) end
 

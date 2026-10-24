@@ -10,10 +10,10 @@ escala = 3.5
 --SONIDOS
 sonidos = {
     musica = love.audio.newSource("sounds/tunetank-medieval.mp3", "stream"),
-    victoria = love.audio.newSource("sounds/victoria.wav", "stream"),
-    derrota = love.audio.newSource("sounds/derrota.wav", "stream"),
-    sfx_hit = love.audio.newSource("sounds/hit.wav", "static"),
-    sfx_whoosh = love.audio.newSource("sounds/whoosh.wav", "static"),
+    victoria = love.audio.newSource("sounds/victoria.mp3", "stream"),
+    derrota = love.audio.newSource("sounds/derrota.mp3", "stream"),
+    sfx_hit = love.audio.newSource("sounds/hit.mp3", "static"),
+    sfx_whoosh = love.audio.newSource("sounds/whoosh.mp3", "static"),
 }
 
 fuente = nil
