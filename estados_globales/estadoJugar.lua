@@ -5,10 +5,18 @@ EstadoJugar = Class {__includes = Estado}
     derrota = false
     victoria = false
 
-    tiempo_spawn = 0
     intervalo_spawn = 1.5
 
     hud = nil
+
+----- TIMER
+local function wait(segundos)
+    local tiempo_transcurrido = 0
+    while tiempo_transcurrido < segundos do
+        local dt = coroutine.yield()
+        tiempo_transcurrido = tiempo_transcurrido + dt
+    end
+end
 
 ------------------------------------- COLISIONES 
 -- Por cuerpo físico
@@ -112,6 +120,19 @@ function EstadoJugar:generarNotaMusical()
 
 end
 
+---- Corrutina
+
+function EstadoJugar:corrutina_spawnnotas()
+    self.rutina_notas = coroutine.create(function()
+    wait(self.nivel_timer)
+
+        while true do
+            self:generarNotaMusical()
+            wait(intervalo_spawn)
+        end
+    end)
+end
+
 -------------------- Reiniciar EstadoJugar
 
 function EstadoJugar:reiniciar()
@@ -153,6 +174,7 @@ function EstadoJugar:reiniciar()
     self.notas_musicales = {}
     self:generarNotaMusical()
 
+    self:corrutina_spawnnotas();
 end
 
 ----------------------INICIALIZAR-------------------------
@@ -198,15 +220,14 @@ function EstadoJugar:init()
 
     self.notas_musicales = {}
 
+    self:corrutina_spawnnotas();
+
     math.randomseed(os.time())
-   
 end   
 
 -- Cada vez que se entra al juego desde el titulo luego de ganar o perder, se reinicia
 function EstadoJugar:ingresar()
-    
     self:reiniciar()
-
 end
 
 function EstadoJugar:salir() end
@@ -230,11 +251,9 @@ function EstadoJugar:actualizar(dt)
 
     self.jugador:Actualizar(dt)
 
-    ---- Generación de notas musicales
-    tiempo_spawn = tiempo_spawn + dt
-    if tiempo_spawn >= intervalo_spawn then
-        self:generarNotaMusical()
-        tiempo_spawn = 0
+    if self.rutina_notas and coroutine.status(self.rutina_notas) ~= "dead" then
+        local exito = coroutine.resume(self.rutina_notas, dt)
+        if not exito then return end
     end
 
     --Movimiento de las notas musicales
