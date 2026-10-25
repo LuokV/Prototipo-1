@@ -1,23 +1,28 @@
 Jugador = Class {}
 
+local teclas_ataque = {
+    q = "ataque",
+    w = "ataque2",
+    e = "ataque3",
+    r = "ataque4"
+}
+
 function Jugador:keypressed(key)
 
     if self.invulnerable then --- no permitir que el jugador ataque si fue herido
         return
     end
 
-    if key == "q" and not self.ataque.activado then
-        self.ataque.activado =true
-        love.audio.play(sonidos.sfx_whoosh)
-    elseif key == "w" and not self.ataque2.activado then
-        self.ataque2.activado =true
-        love.audio.play(sonidos.sfx_whoosh)
-    elseif key == "e" and not self.ataque3.activado then
-        self.ataque3.activado =true
-        love.audio.play(sonidos.sfx_whoosh)
-    elseif key == "r" and not self.ataque4.activado then
-        self.ataque4.activado =true
-        love.audio.play(sonidos.sfx_whoosh)
+    local tipo_ataque = teclas_ataque[key]
+
+    if tipo_ataque then
+        local ataque = self[tipo_ataque]
+
+        if ataque and not ataque.activado then
+            ataque.activado = true
+            sonidos.sfx_whoosh:stop()
+            love.audio.play(sonidos.sfx_whoosh)
+        end
     end
 end
 
@@ -72,18 +77,13 @@ function Jugador:init(x, y, world)
     self.visible = true
     self.rutina_invulnerable = nil
 
-    ----Tipos de ataques musicales de jugador
-    self.ataque = CrearAnimacion("img/GolpeSprites.png",4,25,24,12, false, 25, 0)
-    self.ataque.activado = false
-
-    self.ataque2 = CrearAnimacion("img/GolpeSprites.png",4,25,24,12, false, 25, 0)
-    self.ataque2.activado = false
-
-    self.ataque3 = CrearAnimacion("img/GolpeSprites.png",4,25,24,12, false, 25, 0)
-    self.ataque3.activado = false
-
-    self.ataque4 = CrearAnimacion("img/GolpeSprites.png",4,25,24,12, false, 25, 0)
-    self.ataque4.activado = false
+    ----Ataques del jugador
+    for i = 1, 4 do
+        local tipo_ataque = (i == 1) and "ataque" or ("ataque" .. i)
+    
+        self[tipo_ataque] = CrearAnimacion("img/GolpeSprites.png", 4, 25, 24, 12, false, 25, 0)
+        self[tipo_ataque].activado = false
+    end
 
     --Animaciones
     self.correr_der = CrearAnimacion("img/GoatSprites.png",3,16,16,12, true, 32, 16)
