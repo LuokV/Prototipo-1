@@ -1,7 +1,7 @@
 Jugador = Class {}
 
 local teclas_ataque = {
-    q = "ataque",
+    q = "ataque1",
     w = "ataque2",
     e = "ataque3",
     r = "ataque4"
@@ -79,7 +79,7 @@ function Jugador:init(x, y, world)
 
     ----Ataques del jugador
     for i = 1, 4 do
-        local tipo_ataque = (i == 1) and "ataque" or ("ataque" .. i)
+        local tipo_ataque = "ataque" .. i
     
         self[tipo_ataque] = CrearAnimacion("img/GolpeSprites.png", 4, 25, 24, 12, false, 25, 0)
         self[tipo_ataque].activado = false
@@ -142,11 +142,12 @@ self.particula:update(dt)
 self.hitbox_x = self.cuerpo:getX() - self.origen_x
 self.hitbox_y = self.cuerpo:getY() - self.origen_y
 
--- Animaciones de ataque del juegaor
-ActualizarAnimacion(self.ataque,dt, true)
-ActualizarAnimacion(self.ataque2,dt, true)
-ActualizarAnimacion(self.ataque3,dt, true)
-ActualizarAnimacion(self.ataque4,dt, true)
+-- Animaciones de ataque del jugador
+for i = 1, 4 do
+    local tipo_ataque = "ataque" .. i
+    
+    ActualizarAnimacion(self[tipo_ataque], dt, true)
+end
 
 end
 
@@ -162,7 +163,7 @@ end
 
 ------ Dibujar Ataque 
 love.graphics.setColor(1, 0, 0)
-DibujarAnimacion(self.ataque, redondear(self.cuerpo:getX()), redondear(self.cuerpo:getY()), self.origen_x + 5, self.origen_y + 5)
+DibujarAnimacion(self.ataque1, redondear(self.cuerpo:getX()), redondear(self.cuerpo:getY()), self.origen_x + 5, self.origen_y + 5)
 love.graphics.setColor(0, 1, 0)
 DibujarAnimacion(self.ataque2, redondear(self.cuerpo:getX()), redondear(self.cuerpo:getY()), self.origen_x + 5, self.origen_y + 5)
 love.graphics.setColor(0, 0, 1)
